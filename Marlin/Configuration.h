@@ -1,5 +1,5 @@
 /**
-MISSING FEATURES: EMERGENCY_PARSER, FAST_PWM_FAN
+MISSING FEATURES: EMERGENCY_PARSER, FAST_PWM_FAN, SDSUPPORT, PRINTCOUNTER, EEPROM_SETTINGS
 Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_MAX_RX_QUEUED
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
@@ -77,8 +77,8 @@ Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, 
 // build by the user have been successfully uploaded into firmware.
 #define STRING_CONFIG_H_AUTHOR "HASCHTL" // Who made the changes.
 #define SHOW_BOOTSCREEN
-#define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
-#define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
+#define STRING_SPLASH_LINE1 "Kellerdrucker startet" //SHORT_BUILD_VERSION // will be shown during bootup in line 1
+#define STRING_SPLASH_LINE2 "http://kellerdrucker/" //WEBSITE_URL         // will be shown during bootup in line 2
 
 /**
  * *** VENDORS PLEASE READ ***
@@ -1409,7 +1409,7 @@ Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, 
  *   M501 - Read settings from EEPROM. (i.e., Throw away unsaved changes)
  *   M502 - Revert settings to "factory" defaults. (Follow with M500 to init the EEPROM.)
  */
-#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
+//#define EEPROM_SETTINGS     // Persistent storage with M500 and M501
 //#define DISABLE_M503        // Saves ~2700 bytes of PROGMEM. Disable for release!
 #define EEPROM_CHITCHAT       // Give feedback on EEPROM commands. Disable to save PROGMEM.
 #if ENABLED(EEPROM_SETTINGS)
@@ -1568,7 +1568,7 @@ Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, 
  *
  * View the current statistics with M78.
  */
-#define PRINTCOUNTER
+//#define PRINTCOUNTER
 
 //=============================================================================
 //============================= LCD and SD support ============================
@@ -1626,7 +1626,7 @@ Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, 
  * you must uncomment the following option or it won't work.
  *
  */
-#define SDSUPPORT
+//#define SDSUPPORT
 
 /**
  * SD CARD: SPI SPEED
