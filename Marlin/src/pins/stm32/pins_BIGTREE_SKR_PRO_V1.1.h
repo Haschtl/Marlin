@@ -161,8 +161,9 @@
 //
 #define TEMP_0_PIN         PF4  // T1 <-> E0
 #define TEMP_1_PIN         PF5  // T2 <-> E1
-#define TEMP_2_PIN         PF6  // T3 <-> E2
+//#define TEMP_2_PIN         PF6  // T3 <-> E2
 #define TEMP_BED_PIN       PF3  // T0 <-> Bed
+#define TEMP_CHAMBER_PIN   PF6
 
 //
 // Heaters / Fans
@@ -173,7 +174,7 @@
 #define HEATER_BED_PIN     PD12 // Hotbed
 #define FAN_PIN            PC8  // Fan0
 #define FAN1_PIN           PE5  // Fan1
-#define FAN2_PIN           PE6  // Fan2
+//#define FAN2_PIN           PE6  // Fan2
 
 //
 // Misc. Functions
@@ -242,3 +243,37 @@
   #endif
 
 #endif // HAS_SPI_LCD
+#define PS_ON_PIN          PG13
+#define FIL_RUNOUT_PIN     PD3
+#define FIL_RUNOUT_PIN2     PG14
+#define SPINDLE_LASER_ENA_PIN     PG11   // Pin should have a pullup/pulldown!
+#define SPINDLE_LASER_PWM_PIN     PF7   // MUST BE HARDWARE PWM ?
+#define SPINDLE_DIR_PIN           PC1
+
+#if ENABLED(CASE_LIGHT_ENABLE) && !defined(CASE_LIGHT_PIN)
+  #define CASE_LIGHT_PIN  PF8   // MUST BE HARDWARE PWM
+#endif
+
+#ifndef FILWIDTH_PIN
+  #define FILWIDTH_PIN      PF10   // Analog Input on AUX2
+#endif
+
+#define BEEPER_PIN         PC9
+
+#define CONTROLLER_FAN_PIN PE6        // Set a custom pin for the controller fan
+
+#define E0_AUTO_FAN_PIN PD0
+#define E1_AUTO_FAN_PIN PD0
+#define CHAMBER_AUTO_FAN_PIN PE5
+
+//define LCD_SDSS -1
+//#define LCD_SDSS       PB12
+#define BTN_EN1        PG10
+#define BTN_EN2        PF11  // A2 - rotary encoder B
+#define BTN_ENC        PA8  // A3 - rotary encoder push switch
+
+// I2C Display is connected to I2C 1
+//#define LCD_PINS_D5  PG3
+//#define LCD_PINS_D6  PG6
+//#define LCD_PINS_D7  PG7
+#define CALIBRATION_PIN -1 // Override in pins.h or set to -1 to use your Z endstop
