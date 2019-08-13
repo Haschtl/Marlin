@@ -204,13 +204,6 @@
   #if ENABLED(PID_FAN_SCALING)
     #define DEFAULT_Kf (1) //power loss due to cooling=Kf*(e_speed)
   #endif
-
-  // Add an experimental additional term to the heater power, proportional to the fan speed.
-  // A well-chosen Kf value should add just enough power to compensate power losses induced by the cooling fan.
-  #define PID_FAN_SCALING
-  #if ENABLED(PID_FAN_SCALING)
-    #define DEFAULT_Kf (100) //power loss due to cooling=Kc*(e_speed)
-  #endif
 #endif
 
 /**
