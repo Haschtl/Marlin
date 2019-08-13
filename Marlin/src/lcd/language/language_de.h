@@ -34,8 +34,8 @@
 #define THIS_LANGUAGES_SPECIAL_SYMBOLS      _UxGT("ÄäÖöÜüß²³")
 
 #define WELCOME_MSG                         MACHINE_NAME _UxGT(" bereit")
-#define MSG_YES                             _UxGT("JA")
-#define MSG_NO                              _UxGT("NEIN")
+#define MSG_YES                             _UxGT("Joa")
+#define MSG_NO                              _UxGT("Nö")
 #define MSG_BACK                            _UxGT("Zurück")
 #define MSG_SD_INSERTED                     _UxGT("SD-Karte erkannt")
 #define MSG_SD_REMOVED                      _UxGT("SD-Karte entfernt")
