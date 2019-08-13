@@ -1986,8 +1986,8 @@ Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE
 //
 // SSD1306 OLED full graphics generic display
 //
-#define U8GLIB_SSD1306
-#define ULTIPANEL
+//#define U8GLIB_SSD1306
+#define U8GLIB_SSD1306_CONTROLLER
 
 //
 // SAV OLEd LCD module support using either SSD1306 or SH1106 based LCD modules
