@@ -880,6 +880,13 @@ float Temperature::get_pid_output_hotend(const uint8_t e) {
             pid_output += work_pid[ee].Kc;
           }
         #endif // PID_EXTRUSION_SCALING
+		
+		#if ENABLED(PID_FAN_SCALING)
+          work_pid[ee].Kf = thermalManager.fan_speed[active_extruder] * PID_PARAM(Kf, ee);
+          // pid_output += work_pid[ee].Kf;
+          // pid_output -= work_pid[ee].Ki;
+          // pid_output += work_pid[ee].Ki * work_pid[ee].Kf
+        #endif // PID_FAN_SCALING
 
         LIMIT(pid_output, 0, PID_MAX);
       }

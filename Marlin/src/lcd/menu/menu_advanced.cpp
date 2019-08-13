@@ -363,6 +363,14 @@ void menu_backlash();
       #else
         #define _PID_EDIT_MENU_ITEMS(ELABEL, eindex) _PID_BASE_MENU_ITEMS(ELABEL, eindex)
       #endif
+	  
+	  #if ENABLED(PID_FAN_SCALING)
+        #define _PID_EDIT_MENU_ITEMS(ELABEL, eindex) \
+          _PID_BASE_MENU_ITEMS(ELABEL, eindex); \
+          MENU_ITEM_EDIT(float3, MSG_PID_F ELABEL, &PID_PARAM(Kf, eindex), 1, 9990)
+      #else
+        #define _PID_EDIT_MENU_ITEMS(ELABEL, eindex) _PID_BASE_MENU_ITEMS(ELABEL, eindex)
+      #endif
 
     #else
 

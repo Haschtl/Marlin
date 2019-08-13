@@ -55,15 +55,25 @@ typedef enum : int8_t {
 // PID storage
 typedef struct { float Kp, Ki, Kd;     } PID_t;
 typedef struct { float Kp, Ki, Kd, Kc; } PIDC_t;
+typedef struct { float Kp, Ki, Kd, Kf; } PIDF_t;
+typedef struct { float Kp, Ki, Kd, Kc, Kf; } PIDCF_t;
 #if ENABLED(PID_EXTRUSION_SCALING)
-  typedef PIDC_t hotend_pid_t;
+  #if ENABLED(PID_FAN_SCALING)
+    typedef PIDCF_t hotend_pid_t;
+  #else
+    typedef PIDC_t hotend_pid_t;
+  #endif
   #if LPQ_MAX_LEN > 255
     typedef uint16_t lpq_ptr_t;
   #else
     typedef uint8_t lpq_ptr_t;
   #endif
 #else
-  typedef PID_t hotend_pid_t;
+  #if ENABLED(PID_FAN_SCALING)
+    typedef PIDF_t hotend_pid_t;
+  #else
+    typedef PID_t hotend_pid_t;
+  #endif
 #endif
 
 #define DUMMY_PID_VALUE 3000.0f
@@ -76,6 +86,12 @@ typedef struct { float Kp, Ki, Kd, Kc; } PIDC_t;
     #define _PID_Kc(H) Temperature::temp_hotend[H].pid.Kc
   #else
     #define _PID_Kc(H) 1
+  #endif
+  
+  #if ENABLED(PID_FAN_SCALING)
+    #define _PID_Kf(H) Temperature::temp_hotend[H].pid.Kf
+  #else
+    #define _PID_Kf(H) 0
   #endif
 #else
   #define _PID_Kp(H) DUMMY_PID_VALUE

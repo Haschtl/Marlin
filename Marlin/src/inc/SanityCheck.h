@@ -404,6 +404,11 @@
 #elif MB(BOARD_BIQU_SKR_V1_1)
   #error "BIQU_SKR_V1_1 has been renamed BOARD_BIGTREE_SKR_V1_1. Please update your configuration."
 #endif
+
+#if defined(PID_FAN_SCALING) && FAN_COUNT<=0
+  #error "PID_FAN_SCALING needs at least one fan enabled."
+#endif
+
 #undef BOARD_MKS_13
 #undef BOARD_TRIGORILLA
 #undef BOARD_RURAMPS4D

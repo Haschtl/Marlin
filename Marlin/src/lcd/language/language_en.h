@@ -621,6 +621,9 @@
 #ifndef MSG_PID_C
   #define MSG_PID_C                           _UxGT("PID-C")
 #endif
+#ifndef MSG_PID_F
+  #define MSG_PID_F                           _UxGT("PID-F")
+#endif
 #ifndef MSG_SELECT
   #define MSG_SELECT                          _UxGT("Select")
 #endif

@@ -38,6 +38,10 @@
  *
  *   C[float] Kc term
  *   L[int] LPQ length
+ *
+ * With PID_FAN_SCALING:
+ *
+ *   C[float] Kf term
  */
 void GcodeSuite::M301() {
 
@@ -55,6 +59,10 @@ void GcodeSuite::M301() {
       NOMORE(thermalManager.lpq_len, LPQ_MAX_LEN);
       NOLESS(thermalManager.lpq_len, 0);
     #endif
+	
+	#if ENABLED(PID_FAN_SCALING)
+      if (parser.seen('F')) PID_PARAM(Kf, e) = parser.value_float();
+    #endif
 
     thermalManager.updatePID();
     SERIAL_ECHO_START();
@@ -68,6 +76,12 @@ void GcodeSuite::M301() {
       //Kc does not have scaling applied above, or in resetting defaults
       SERIAL_ECHOPAIR(" c:", PID_PARAM(Kc, e));
     #endif
+	
+	#if ENABLED(PID_FAN_SCALING)
+      //Kc does not have scaling applied above, or in resetting defaults
+      SERIAL_ECHOPAIR(" f:", PID_PARAM(Kf, e));
+    #endif
+	
     SERIAL_EOL();
   }
   else
