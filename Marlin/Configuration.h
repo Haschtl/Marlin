@@ -1,6 +1,6 @@
 /**
 MISSING FEATURES: EMERGENCY_PARSER, FAST_PWM_FAN
-Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE
+Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_MAX_RX_QUEUED
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
@@ -1568,7 +1568,7 @@ Opts: SQUARE_WAVE_STEPPING, PINS_DEBUGGING, MARLIN_DEV_MODE
  *
  * View the current statistics with M78.
  */
-//#define PRINTCOUNTER
+#define PRINTCOUNTER
 
 //=============================================================================
 //============================= LCD and SD support ============================
