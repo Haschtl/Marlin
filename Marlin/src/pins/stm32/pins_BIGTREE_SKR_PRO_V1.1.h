@@ -27,7 +27,7 @@
   #error "BIGTREE SKR Pro V1.1 supports up to 3 hotends / E-steppers."
 #endif
 
-#define BOARD_NAME "BIGTREE SKR Pro 1.1"
+//#define BOARD_NAME "BIGTREE SKR Pro 1.1"
 
 // Use one of these or SDCard-based Emulation will be used
 //#define SRAM_EEPROM_EMULATION   // Use BackSRAM-based EEPROM emulation
@@ -258,7 +258,7 @@
   #define FILWIDTH_PIN      PF10   // Analog Input on AUX2
 #endif
 
-#define BEEPER_PIN         PC9
+//#define BEEPER_PIN         PC9
 
 #define CONTROLLER_FAN_PIN PE6        // Set a custom pin for the controller fan
 
