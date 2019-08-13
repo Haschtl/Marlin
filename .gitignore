@@ -117,7 +117,7 @@ tags
 
 # PlatformIO files/dirs
 .pio*
-.pioenvs
+# .pioenvs
 .piolibdeps
 .clang_complete
 .gcc-flags.json
