@@ -2625,10 +2625,10 @@
 /**
  * Advanced Print Counter settings
  */
-#if ENABLED(PRIaNTCOUNTER)
+#if ENABLED(PRINTCOUNTER)
   #define SERVICE_WARNING_BUZZES  3
   // Activate up to 3 service interval watchdogs
-  #define SERVICE_NAME_1      "Service empfohlen"
+  #define SERVICE_NAME_1      "Service bald"
   #define SERVICE_INTERVAL_1  100 // print hours
   #define SERVICE_NAME_2      "Service empfohlen"
   #define SERVICE_INTERVAL_2  200 // print hours
@@ -2641,7 +2641,7 @@
 /**
  * M43 - display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins
  */
-//#define PINS_DEBUGGING
+#define PINS_DEBUGGING
 
 // Enable Marlin dev mode which adds some special commands
 //#define MARLIN_DEV_MODE
