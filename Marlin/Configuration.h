@@ -1988,6 +1988,10 @@ Opts: PINS_DEBUGGING, MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_R
 // SSD1306 OLED full graphics generic display
 //
 //#define U8GLIB_SSD1306
+
+//
+// SSD1306 OLED I2C full graphics display with encoder
+//
 #define U8GLIB_SSD1306_CONTROLLER
 
 //

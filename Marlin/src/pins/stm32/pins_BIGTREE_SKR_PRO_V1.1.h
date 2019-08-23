@@ -262,12 +262,13 @@
 //#endif
 
 //#define BEEPER_PIN         PC9
+#define BEEPER_PIN       PG4
 
 #define CONTROLLER_FAN_PIN PE5        // Set a custom pin for the controller fan
 
-#define E0_AUTO_FAN_PIN PD3
-#define E1_AUTO_FAN_PIN PD3
-#define CHAMBER_AUTO_FAN_PIN PE6
+//#define E0_AUTO_FAN_PIN PD3
+//#define E1_AUTO_FAN_PIN PD3
+//#define CHAMBER_AUTO_FAN_PIN PE6
 
 //define LCD_SDSS -1
 //#define LCD_SDSS       PB12
