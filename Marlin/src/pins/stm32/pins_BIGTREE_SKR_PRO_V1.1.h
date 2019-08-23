@@ -245,7 +245,7 @@
 #endif // HAS_SPI_LCD
 
 
-#define TEMP_0_PIN         PD0
+#define TEMP_0_PIN         PF9
 #define PS_ON_PIN          PG13
 #define FIL_RUNOUT_PIN     PE15
 #define FIL_RUNOUT_PIN2     PE10
