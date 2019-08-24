@@ -340,7 +340,7 @@ Opts: MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_
     #define AUTO_POWER_CHAMBER_FAN
     #define AUTO_POWER_E_TEMP        50 // (°C) Turn on PSU over this temperature
     //#define AUTO_POWER_CHAMBER_TEMP  30 // (°C) Turn on PSU over this temperature
-    #define POWER_TIMEOUT 30
+    #define POWER_TIMEOUT 120
   #endif
 #endif
 
