@@ -42,11 +42,11 @@
 // Limit Switches
 //
 #define X_MIN_PIN          PB10
-#define X_MAX_PIN          PE15
-#define Y_MIN_PIN          PE12
-#define Y_MAX_PIN          PE10
-#define Z_MIN_PIN          PG8
-#define Z_MAX_PIN          PG5
+#define X_MAX_PIN          -1 //PE15
+#define Y_MIN_PIN          -1 //PE12
+#define Y_MAX_PIN          PE12 //PE10
+#define Z_MIN_PIN          -1 //PG8
+#define Z_MAX_PIN          PG8 //PG5
 
 //
 // Z Probe must be this pins
@@ -173,7 +173,7 @@
 #define HEATER_2_PIN       PB0  // Heater1
 #define HEATER_BED_PIN     PD12 // Hotbed
 #define FAN_PIN            PC8  // Fan0
-#define FAN1_PIN           -1 //PE5  // Fan1
+#define FAN1_PIN           PE6 //PE5  // Fan1
 //#define FAN2_PIN           PE6  // Fan2
 
 //

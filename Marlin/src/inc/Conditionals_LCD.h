@@ -223,6 +223,8 @@
   #define U8GLIB_SSD1306
   #define IS_ULTIPANEL
   #define IS_U8GLIB_SSD1306
+  #define ENCODER_PULSES_PER_STEP     2 // Overlord uses buttons
+  #define ENCODER_STEPS_PER_MENU_ITEM 1
 #endif
 
 // 128x64 I2C OLED LCDs - SSD1306/SSD1309/SH1106
