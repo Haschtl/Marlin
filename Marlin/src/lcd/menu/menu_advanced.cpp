@@ -616,6 +616,7 @@ void menu_backlash();
           #if HAS_BUZZER
             ui.completion_feedback(inited);
           #endif
+          UNUSED(inited);
         },
         ui.goto_previous_screen,
         PSTR(MSG_INIT_EEPROM), nullptr, PSTR("?")
