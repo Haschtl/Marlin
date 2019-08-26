@@ -1,6 +1,6 @@
 /**
-MISSING FEATURES: EMERGENCY_PARSER, FAST_PWM_FAN, SENSORLESS_HOMING, PREVENT_COLD_EXTRUSION, CHAMBER_AUTO_FAN_PIN, SQUARE_WAVE_STEPPING, HYBRID_THRESHOLD, ADAPTIVE_STEP_SMOOTHING
-Opts: MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_MAX_RX_QUEUED, PRINTCOUNTER, SOFTWARE_DRIVER_ENABLE
+MISSING FEATURES: EMERGENCY_PARSER, FAST_PWM_FAN, SENSORLESS_HOMING, PREVENT_COLD_EXTRUSION, CHAMBER_AUTO_FAN_PIN, QUICK_HOME
+Opts: MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_MAX_RX_QUEUED, PRINTCOUNTER
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
@@ -408,7 +408,7 @@ Opts: MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_
  * :{ '0':"Not used", '1':"100k / 4.7k - EPCOS", '331':"(3.3V thermistor 1)", '2':"200k / 4.7k - ATC Semitec 204GT-2", '3':"Mendel-parts / 4.7k", '4':"10k !! do not use for a hotend. Bad resolution at high temp. !!", '5':"100K / 4.7k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '501':"100K Zonestar (Tronxy X3A)", '512':"100k RPW-Ultra hotend thermistor", '6':"100k / 4.7k EPCOS - Not as accurate as Table 1", '7':"100k / 4.7k Honeywell 135-104LAG-J01", '8':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT", '9':"100k / 4.7k GE Sensing AL03006-58.2K-97-G1", '10':"100k / 4.7k RS 198-961", '11':"100k / 4.7k beta 3950 1%", '12':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT (calibrated for Makibox hot bed)", '13':"100k Hisens 3950  1% up to 300°C for hotend 'Simple ONE ' & hotend 'All In ONE'", '18':"ATC Semitec 204GT-2 (4.7k pullup) Dagoma.Fr - MKS_Base_DKU001327" '20':"Pt100 (Ultimainboard V2.x)", '201':"Pt100 (Overlord)", '51':"100k / 1k - EPCOS", '52':"200k / 1k - ATC Semitec 204GT-2", '55':"100k / 1k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '60':"100k Maker's Tool Works Kapton Bed Thermistor beta=3950", '61':"100k Formbot / Vivedino 3950 350C thermistor 4.7k pullup", '66':"Dyze Design 4.7M High Temperature thermistor", '67':"Slice Engineering 450C High Temperature thermistor", '70':"the 100K thermistor found in the bq Hephestos 2", '71':"100k / 4.7k Honeywell 135-104LAF-J01", '147':"Pt100 / 4.7k", '1047':"Pt1000 / 4.7k", '110':"Pt100 / 1k (non-standard)", '1010':"Pt1000 / 1k (non standard)", '-4':"Thermocouple + AD8495", '-3':"Thermocouple + MAX31855 (only for sensor 0)", '-2':"Thermocouple + MAX6675 (only for sensor 0)", '-1':"Thermocouple + AD595", '998':"Dummy 1", '999':"Dummy 2", '1000':"Custom thermistor params" }
  */
 #define TEMP_SENSOR_0 20
-#define TEMP_SENSOR_1 11
+#define TEMP_SENSOR_1 12
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
 #define TEMP_SENSOR_4 0
@@ -679,7 +679,7 @@ Opts: MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
-#define ENDSTOP_INTERRUPTS_FEATURE
+//#define ENDSTOP_INTERRUPTS_FEATURE
 
 /**
  * Endstop Noise Threshold
@@ -725,9 +725,11 @@ Opts: MARLIN_DEV_MODE, SDCARD_SORT_ALPHA, SERIAL_STATS_DROPPED_RX, SERIAL_STATS_
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
- *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
- */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 16.667, 200 ,200 } // { 300, 300, 5, 25}
+ * 
+ * Maximum is dependent on CPU, for ARM ~ 100.000 Steps/s 
+ *                                     X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
+ */ 
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 30, 200 ,200 } // { 300, 300, 5, 25}
 
 /**
  * Default Max Acceleration (change/s) change = mm/s

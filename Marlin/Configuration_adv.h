@@ -526,7 +526,7 @@
 #define Y_HOME_BUMP_MM 5
 #define Z_HOME_BUMP_MM 2
 #define HOMING_BUMP_DIVISOR { 2, 2, 4 }  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
-#define QUICK_HOME                     // If homing includes X and Y, do a diagonal move initially
+//#define QUICK_HOME                     // If homing includes X and Y, do a diagonal move initially
 //#define HOMING_BACKOFF_MM { 2, 2, 2 }  // (mm) Move away from the endstops after homing
 
 // When G28 is called, this option will make Y home before X
@@ -775,7 +775,7 @@
  * vibration and surface artifacts. The algorithm adapts to provide the best possible step smoothing at the
  * lowest stepping frequencies.
  */
-//#define ADAPTIVE_STEP_SMOOTHING
+#define ADAPTIVE_STEP_SMOOTHING
 
 /**
  * Custom Microstepping
@@ -789,7 +789,7 @@
 //#define MICROSTEP32 HIGH,LOW,HIGH
 
 // Microstep setting (Only functional when stepper driver microstep pins are connected to MCU.
-#define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
+#define MICROSTEP_MODES { 256, 256, 256, 256, 32, 16 } // [1,2,4,8,16]
 
 /**
  *  @section  stepper motor current
@@ -1722,8 +1722,8 @@
   #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT     500  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #define X_MICROSTEPS   256  // 0..256
+    #define X_CURRENT     1000  // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_MICROSTEPS   16  // 0..256
     #define X_RSENSE      0.075
   #endif
 
@@ -1734,8 +1734,8 @@
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #define Y_CURRENT     500
-    #define Y_MICROSTEPS    256
+    #define Y_CURRENT     1000
+    #define Y_MICROSTEPS    16
     #define Y_RSENSE      0.075
   #endif
 
@@ -1746,8 +1746,8 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     500
-    #define Z_MICROSTEPS    256
+    #define Z_CURRENT     1000
+    #define Z_MICROSTEPS    16
     #define Z_RSENSE      0.075
   #endif
 
@@ -1764,13 +1764,13 @@
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT    500
+    #define E0_CURRENT    1000
     #define E0_MICROSTEPS   256
     #define E0_RSENSE     0.075
   #endif
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT    500
+    #define E1_CURRENT    800
     #define E1_MICROSTEPS   256
     #define E1_RSENSE     0.075
   #endif
@@ -1973,7 +1973,7 @@
    * Beta feature!
    * Create a 50/50 square wave step pulse optimal for stepper drivers.
    */
-  //#define SQUARE_WAVE_STEPPING
+  #define SQUARE_WAVE_STEPPING
 
   /**
    * Enable M122 debugging command for TMC stepper drivers.
