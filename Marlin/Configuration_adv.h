@@ -202,7 +202,7 @@
   // A well-chosen Kf value should add just enough power to compensate power losses induced by the cooling fan.
   #define PID_FAN_SCALING
   #if ENABLED(PID_FAN_SCALING)
-    #define DEFAULT_Kf (0.3) //power loss due to cooling=Kf*(e_speed)
+    #define DEFAULT_Kf (0.35) //power loss due to cooling=Kf*(fan_speed)
   #endif
 #endif
 
