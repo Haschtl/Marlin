@@ -471,25 +471,32 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD
   //#define SLOW_PWM_HEATERS      // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
   #define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
-  #define PID_FUNCTIONAL_RANGE 8 // If the temperature difference between the target temperature and the actual temperature
+  #define PID_FUNCTIONAL_RANGE  100 //20 // If the temperature difference between the target temperature and the actual temperature
                                   // is more than PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
-  // Ultimaker
-  #define DEFAULT_Kp 15
-  #define DEFAULT_Ki 1.08
-  #define DEFAULT_Kd 34
+  // Calculate "some overshoot" PID:
+  // Kp=Kp_classic*0.55
+  //  Ki=Ki_classic
+  //  Kd=Kd_classic*8/3
 
-  // MakerGear
-  //#define DEFAULT_Kp 7.0
-  //#define DEFAULT_Ki 0.1
-  //#define DEFAULT_Kd 12
+  // Calculate "no overshoot" PID:
+  // Kp=Kp_classic/3 
+  // Ki=Ki_classic 
+  // Kd=Kd_classic*8/3
+  
+  // Kellerdrucker Classic PID, Hotend0, good at functional range 100
+  #define DEFAULT_Kp 4
+  #define DEFAULT_Ki 0.065
+  #define DEFAULT_Kd 2
+  // Kf = 0.35
+  // Kc = 100
 
-  // Mendel Parts V9 on 12V
-  //#define DEFAULT_Kp 63.0
-  //#define DEFAULT_Ki 2.25
-  //#define DEFAULT_Kd 440
+  // Kellerdrucker Classic PID, Hotend1
+  // #define DEFAULT_Kp 6
+  // #define DEFAULT_Ki 0.07
+  // #define DEFAULT_Kd 2
 
 #endif // PIDTEMP
 
@@ -526,11 +533,10 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
-  //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
-  //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  #define DEFAULT_bedKp 34
-  #define DEFAULT_bedKi .05
-  #define DEFAULT_bedKd 340
+  //230V 600W Kellerdrucker silicon heated bed (200x400mm)
+  #define DEFAULT_bedKp 45 //54
+  #define DEFAULT_bedKi 1.7
+  #define DEFAULT_bedKd 380
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from pidautotune
@@ -719,7 +725,12 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 319.8601, 319.8601, 1997.5115, 1743.7500, 395.0638} // { 80, 80, 4000, 500 }
+
+// New Kellerdrucker
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 323.2869, 320.5653, 1997.5115, 1743.7500, 387.317} // { 80, 80, 4000, 500 }
+
+// Old Kellerdrucker
+// #define DEFAULT_AXIS_STEPS_PER_UNIT   { 319.8601, 319.8601, 1997.5115, 1743.7500, 395.0638} // { 80, 80, 4000, 500 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -1334,7 +1345,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD
 
 // Homing speeds (mm/m)
 #define HOMING_FEEDRATE_XY (50*60)
-#define HOMING_FEEDRATE_Z  (1000)
+#define HOMING_FEEDRATE_Z  (1200)
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
