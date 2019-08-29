@@ -1,5 +1,5 @@
 /**
-MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD_EXTRUSION, CHAMBER_AUTO_FAN_PIN
+MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, CHAMBER_AUTO_FAN_PIN
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
@@ -75,9 +75,9 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
 #define STRING_CONFIG_H_AUTHOR "HASCHTL" // Who made the changes.
-#define SHOW_BOOTSCREEN
-#define STRING_SPLASH_LINE1 "Kellerdrucker startet" //SHORT_BUILD_VERSION // will be shown during bootup in line 1
-#define STRING_SPLASH_LINE2 "http://kellerdrucker/" //WEBSITE_URL         // will be shown during bootup in line 2
+//#define SHOW_BOOTSCREEN
+//#define STRING_SPLASH_LINE1 "Kellerdrucker startet" //SHORT_BUILD_VERSION // will be shown during bootup in line 1
+//#define STRING_SPLASH_LINE2 "http://kellerdrucker/" //WEBSITE_URL         // will be shown during bootup in line 2
 
 /**
  * *** VENDORS PLEASE READ ***
@@ -556,7 +556,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD
  *
  * *** IT IS HIGHLY RECOMMENDED TO LEAVE THIS OPTION ENABLED! ***
  */
-//#define PREVENT_COLD_EXTRUSION
+#define PREVENT_COLD_EXTRUSION
 #define EXTRUDE_MINTEMP 170
 
 /**
@@ -727,8 +727,12 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, PREVENT_COLD
  */
 
 // New Kellerdrucker
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 323.2869, 320.5653, 1997.5115, 1743.7500, 387.317} // { 80, 80, 4000, 500 }
-
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 323.2869, 320.5653, 1997.5115, 1747.2445, 387.317} // { 80, 80, 4000, 500 }
+// X: 400x32x
+// Y: 400x32x
+// Z: 400x32x
+// E0: 400x32x3/(7.3 * 3.142)
+// E1: 400x
 // Old Kellerdrucker
 // #define DEFAULT_AXIS_STEPS_PER_UNIT   { 319.8601, 319.8601, 1997.5115, 1743.7500, 395.0638} // { 80, 80, 4000, 500 }
 
