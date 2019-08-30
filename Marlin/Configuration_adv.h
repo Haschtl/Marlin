@@ -197,7 +197,7 @@
     #define DEFAULT_Kc (100) //heating power=Kc*(e_speed)
     #define LPQ_MAX_LEN 50
   #endif
-  
+
   // Add an experimental additional term to the heater power, proportional to the fan speed.
   // A well-chosen Kf value should add just enough power to compensate power losses induced by the cooling fan.
   #define PID_FAN_SCALING
@@ -359,7 +359,7 @@
 #define E3_AUTO_FAN_PIN -1
 #define E4_AUTO_FAN_PIN -1
 #define E5_AUTO_FAN_PIN -1
-//#define CHAMBER_AUTO_FAN_PIN PE6
+#define CHAMBER_AUTO_FAN_PIN PE6
 
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
 #define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed

@@ -726,8 +726,10 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, CHAMBER_AUTO
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
 
-// New Kellerdrucker
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 323.2869, 320.5653, 1997.5115, 1747.2445, 387.317} // { 80, 80, 4000, 500 }
+// New Kellerdrucker: Kalibriert an Schlitten
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 323.2869, 320.5653, 1997.5115, 1747.2445, 387.317} // { 80, 80, 4000, 500 }
+// New Kellerdrucker: Kalibriert mit Laser
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 319.0331, 319.1447, 1997.5115, 1747.2445, 387.317} // { 80, 80, 4000, 500 }
 // X: 400x32x
 // Y: 400x32x
 // Z: 400x32x
