@@ -45,7 +45,7 @@
 #define X_MAX_PIN          -1 //PE15
 #define Y_MIN_PIN          -1 //PE12
 #define Y_MAX_PIN          PE12 //PE10
-#define Z_MIN_PIN          -1 //PG8
+#define Z_MIN_PIN          PG5 //PG8
 #define Z_MAX_PIN          PG8 //PG5
 
 //
