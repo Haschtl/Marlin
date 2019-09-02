@@ -90,7 +90,10 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, CHAMBER_AUTO
  * respectfully request that you retain the unmodified Marlin boot screen.
  */
 
-// Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
+// Show the Marlin bootscreen on startup. ** ENABLE FOR PRODUCTION **
+//#define SHOW_BOOTSCREEN
+
+// Show the bitmap in Marlin/_Bootscreen.h on startup.
 #define SHOW_CUSTOM_BOOTSCREEN
 
 // Show the bitmap in Marlin/_Statusscreen.h on the status screen.
