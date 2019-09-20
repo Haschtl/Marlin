@@ -1,5 +1,5 @@
 /**
-MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, CHAMBER_AUTO_FAN_PIN
+MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
@@ -327,7 +327,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, PSU_CONTROL, CHAMBER_AUTO
  * Specify whether the power supply is active HIGH or active LOW.
  */
 #define PSU_CONTROL
-#define PSU_NAME "Power Supply"
+#define PSU_NAME "Igor"
 
 #if ENABLED(PSU_CONTROL)
   #define PSU_ACTIVE_HIGH true // Set 'false' for ATX (1), 'true' for X-Box (2)
