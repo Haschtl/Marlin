@@ -399,9 +399,6 @@ bool pause_print(const float &retract, const point_t &park_point, const float &u
     #elif defined(ACTION_ON_PAUSE)
       host_action_pause();
     #endif
-    #if ENABLED(HOST_PROMPT_SUPPORT)
-      host_prompt_open(PROMPT_INFO, PSTR("Pause"));
-    #endif
   #endif
 
   if (!DEBUGGING(DRYRUN) && unload_length && thermalManager.targetTooColdToExtrude(active_extruder)) {
@@ -503,6 +500,8 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
 
   #if HAS_BUZZER
     filament_change_beep(max_beep_count, true);
+  #else
+    UNUSED(max_beep_count);
   #endif
 
   // Start the heater idle timers
@@ -676,10 +675,6 @@ void resume_print(const float &slow_load_length/*=0*/, const float &fast_load_le
   #endif
 
   --did_pause_print;
-
-  #if ENABLED(HOST_PROMPT_SUPPORT)
-    host_prompt_open(PROMPT_INFO, PSTR("Resume"));
-  #endif
 
   #if ENABLED(SDSUPPORT)
     if (did_pause_print) {

@@ -79,7 +79,7 @@ void _lcd_mesh_edit_NOP() {
 float lcd_mesh_edit() {
   ui.goto_screen(_lcd_mesh_edit_NOP);
   ui.refresh(LCDVIEW_CALL_REDRAW_NEXT);
-  _lcd_mesh_fine_tune(PSTR("Mesh Editor"));
+  _lcd_mesh_fine_tune(PSTR(MSG_MESH_EDITOR));
   return mesh_edit_value;
 }
 
@@ -89,7 +89,7 @@ void lcd_mesh_edit_setup(const float &initial) {
 }
 
 void _lcd_z_offset_edit() {
-  _lcd_mesh_fine_tune(PSTR("Z-Offset: "));
+  _lcd_mesh_fine_tune(PSTR(MSG_UBL_Z_OFFSET));
 }
 
 float lcd_z_offset_edit() {
@@ -420,8 +420,8 @@ void _lcd_ubl_map_homing() {
  */
 void _lcd_ubl_map_lcd_edit_cmd() {
   char ubl_lcd_gcode[50], str[10], str2[10];
-  dtostrf(pgm_read_float(&ubl._mesh_index_to_xpos[x_plot]), 0, 2, str);
-  dtostrf(pgm_read_float(&ubl._mesh_index_to_ypos[y_plot]), 0, 2, str2);
+  dtostrf(ubl.mesh_index_to_xpos(x_plot), 0, 2, str);
+  dtostrf(ubl.mesh_index_to_ypos(y_plot), 0, 2, str2);
   snprintf_P(ubl_lcd_gcode, sizeof(ubl_lcd_gcode), PSTR("G29 P4 X%s Y%s R%i"), str, str2, int(n_edit_pts));
   lcd_enqueue_one_now(ubl_lcd_gcode);
 }

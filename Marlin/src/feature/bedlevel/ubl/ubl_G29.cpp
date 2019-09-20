@@ -24,7 +24,7 @@
 
 #if ENABLED(AUTO_BED_LEVELING_UBL)
 
-  #include "ubl.h"
+  #include "../bedlevel.h"
 
   #include "../../../Marlin.h"
   #include "../../../HAL/shared/persistent_store_api.h"
@@ -33,11 +33,9 @@
   #include "../../../lcd/ultralcd.h"
   #include "../../../module/stepper.h"
   #include "../../../module/planner.h"
+  #include "../../../module/motion.h"
   #include "../../../module/probe.h"
   #include "../../../gcode/gcode.h"
-  #include "../../../core/serial.h"
-  #include "../../../gcode/parser.h"
-  #include "../../../feature/bedlevel/bedlevel.h"
   #include "../../../libs/least_squares_fit.h"
 
   #if ENABLED(DUAL_X_CARRIAGE)
@@ -441,7 +439,7 @@
 
         #if HAS_BED_PROBE
 
-          case 1:
+          case 1: {
             //
             // Invalidate Entire Mesh and Automatically Probe Mesh in areas that can be reached by the probe
             //
@@ -460,7 +458,7 @@
 
             report_current_position();
             probe_deployed = true;
-            break;
+          } break;
 
         #endif // HAS_BED_PROBE
 
@@ -757,10 +755,10 @@
       do {
         if (do_ubl_mesh_map) display_map(g29_map_type);
 
-        const int current = (GRID_MAX_POINTS) - count + 1;
-        SERIAL_ECHOLNPAIR("\nProbing mesh point ", current, "/", int(GRID_MAX_POINTS), ".\n");
+        const int point_num = (GRID_MAX_POINTS) - count + 1;
+        SERIAL_ECHOLNPAIR("\nProbing mesh point ", point_num, "/", int(GRID_MAX_POINTS), ".\n");
         #if HAS_DISPLAY
-          ui.status_printf_P(0, PSTR(MSG_PROBING_MESH " %i/%i"), current, int(GRID_MAX_POINTS));
+          ui.status_printf_P(0, PSTR(MSG_PROBING_MESH " %i/%i"), point_num, int(GRID_MAX_POINTS));
         #endif
 
         #if HAS_LCD_MENU
@@ -783,7 +781,7 @@
         if (location.x_index >= 0) {    // mesh point found and is reachable by probe
           const float rawx = mesh_index_to_xpos(location.x_index),
                       rawy = mesh_index_to_ypos(location.y_index),
-                      measured_z = probe_pt(rawx, rawy, stow_probe ? PROBE_PT_STOW : PROBE_PT_RAISE, g29_verbose_level); // TODO: Needs error handling
+                      measured_z = probe_at_point(rawx, rawy, stow_probe ? PROBE_PT_STOW : PROBE_PT_RAISE, g29_verbose_level); // TODO: Needs error handling
           z_values[location.x_index][location.y_index] = measured_z;
           #if ENABLED(EXTENSIBLE_UI)
             ExtUI::onMeshUpdate(location.x_index, location.y_index, measured_z);
@@ -1091,7 +1089,7 @@
 
     g29_verbose_level = parser.seen('V') ? parser.value_int() : 0;
     if (!WITHIN(g29_verbose_level, 0, 4)) {
-      SERIAL_ECHOLNPGM("?(V)erbose level is implausible (0-4).\n");
+      SERIAL_ECHOLNPGM("?(V)erbose level implausible (0-4).\n");
       err_flag = true;
     }
 
@@ -1410,7 +1408,7 @@
           ui.status_printf_P(0, PSTR(MSG_LCD_TILTING_MESH " 1/3"));
         #endif
 
-        measured_z = probe_pt(PROBE_PT_1_X, PROBE_PT_1_Y, PROBE_PT_RAISE, g29_verbose_level);
+        measured_z = probe_at_point(PROBE_PT_1_X, PROBE_PT_1_Y, PROBE_PT_RAISE, g29_verbose_level);
         if (isnan(measured_z))
           abort_flag = true;
         else {
@@ -1429,7 +1427,7 @@
             ui.status_printf_P(0, PSTR(MSG_LCD_TILTING_MESH " 2/3"));
           #endif
 
-          measured_z = probe_pt(PROBE_PT_2_X, PROBE_PT_2_Y, PROBE_PT_RAISE, g29_verbose_level);
+          measured_z = probe_at_point(PROBE_PT_2_X, PROBE_PT_2_Y, PROBE_PT_RAISE, g29_verbose_level);
           //z2 = measured_z;
           if (isnan(measured_z))
             abort_flag = true;
@@ -1449,7 +1447,7 @@
             ui.status_printf_P(0, PSTR(MSG_LCD_TILTING_MESH " 3/3"));
           #endif
 
-          measured_z = probe_pt(PROBE_PT_3_X, PROBE_PT_3_Y, PROBE_PT_STOW, g29_verbose_level);
+          measured_z = probe_at_point(PROBE_PT_3_X, PROBE_PT_3_Y, PROBE_PT_STOW, g29_verbose_level);
           //z3 = measured_z;
           if (isnan(measured_z))
             abort_flag = true;
@@ -1477,7 +1475,7 @@
 
         bool zig_zag = false;
 
-        uint16_t total_points = g29_grid_size * g29_grid_size, current = 1;
+        uint16_t total_points = g29_grid_size * g29_grid_size, point_num = 1;
 
         for (uint8_t ix = 0; ix < g29_grid_size; ix++) {
           const float rx = float(x_min) + ix * dx;
@@ -1485,12 +1483,12 @@
             const float ry = float(y_min) + dy * (zig_zag ? g29_grid_size - 1 - iy : iy);
 
             if (!abort_flag) {
-              SERIAL_ECHOLNPAIR("Tilting mesh point ", current, "/", total_points, "\n");
+              SERIAL_ECHOLNPAIR("Tilting mesh point ", point_num, "/", total_points, "\n");
               #if HAS_DISPLAY
-                ui.status_printf_P(0, PSTR(MSG_LCD_TILTING_MESH " %i/%i"), current, total_points);
+                ui.status_printf_P(0, PSTR(MSG_LCD_TILTING_MESH " %i/%i"), point_num, total_points);
               #endif
 
-              measured_z = probe_pt(rx, ry, parser.seen('E') ? PROBE_PT_STOW : PROBE_PT_RAISE, g29_verbose_level); // TODO: Needs error handling
+              measured_z = probe_at_point(rx, ry, parser.seen('E') ? PROBE_PT_STOW : PROBE_PT_RAISE, g29_verbose_level); // TODO: Needs error handling
 
               abort_flag = isnan(measured_z);
 
@@ -1518,7 +1516,7 @@
               incremental_LSF(&lsf_results, rx, ry, measured_z);
             }
 
-            current++;
+            point_num++;
           }
 
           zig_zag ^= true;

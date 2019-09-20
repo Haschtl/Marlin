@@ -78,21 +78,13 @@ extern HalSerial usb_serial;
 #define ENABLE_ISRS()
 #define DISABLE_ISRS()
 
-inline void HAL_init(void) { }
+inline void HAL_init() { }
 
 // Utility functions
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
-int freeMemory(void);
+int freeMemory();
 #pragma GCC diagnostic pop
-
-// SPI: Extended functions which take a channel number (hardware SPI only)
-/** Write single byte to specified SPI channel */
-void spiSend(uint32_t chan, byte b);
-/** Write buffer to specified SPI channel */
-void spiSend(uint32_t chan, const uint8_t* buf, size_t n);
-/** Read single byte from specified SPI channel */
-uint8_t spiRec(uint32_t chan);
 
 // ADC
 #define HAL_ANALOG_SELECT(pin) HAL_adc_enable_channel(pin)
@@ -100,10 +92,10 @@ uint8_t spiRec(uint32_t chan);
 #define HAL_READ_ADC()         HAL_adc_get_result()
 #define HAL_ADC_READY()        true
 
-void HAL_adc_init(void);
+void HAL_adc_init();
 void HAL_adc_enable_channel(int pin);
 void HAL_adc_start_conversion(const uint8_t adc_pin);
-uint16_t HAL_adc_get_result(void);
+uint16_t HAL_adc_get_result();
 
 /* ---------------- Delay in cycles */
 FORCE_INLINE static void DELAY_CYCLES(uint64_t x) {

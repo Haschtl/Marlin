@@ -43,20 +43,26 @@
 
 #include "../../inc/MarlinConfigPre.h"
 
+#ifdef USE_USB_COMPOSITE
+  #include "msc_sd.h"
+#endif
+
 // ------------------------
 // Defines
 // ------------------------
 
 #ifdef SERIAL_USB
-  #define UsbSerial Serial
+  #ifndef USE_USB_COMPOSITE
+    #define UsbSerial Serial
+  #else
+    #define UsbSerial MarlinCompositeSerial
+  #endif
   #define MSerial1  Serial1
   #define MSerial2  Serial2
   #define MSerial3  Serial3
   #define MSerial4  Serial4
   #define MSerial5  Serial5
 #else
-  extern USBSerial SerialUSB;
-  #define UsbSerial SerialUSB
   #define MSerial1  Serial
   #define MSerial2  Serial1
   #define MSerial3  Serial2
@@ -110,7 +116,9 @@
 #endif
 
 // Set interrupt grouping for this MCU
-void HAL_init(void);
+void HAL_init();
+#define HAL_IDLETASK 1
+void HAL_idletask();
 
 /**
  * TODO: review this to return 1 for pins that are not analog input
@@ -175,10 +183,10 @@ extern uint16_t HAL_adc_result;
 #define __bss_end __bss_end__
 
 // Clear reset reason
-void HAL_clear_reset_source(void);
+void HAL_clear_reset_source();
 
 // Reset reason
-uint8_t HAL_get_reset_source(void);
+uint8_t HAL_get_reset_source();
 
 void _delay_ms(const int delay);
 
@@ -187,7 +195,7 @@ void _delay_ms(const int delay);
 
 /*
 extern "C" {
-  int freeMemory(void);
+  int freeMemory();
 }
 */
 
@@ -209,17 +217,6 @@ static int freeMemory() {
 #pragma GCC diagnostic pop
 
 //
-// SPI: Extended functions which take a channel number (hardware SPI only)
-//
-
-// Write single byte to specified SPI channel
-void spiSend(uint32_t chan, byte b);
-// Write buffer to specified SPI channel
-void spiSend(uint32_t chan, const uint8_t* buf, size_t n);
-// Read single byte from specified SPI channel
-uint8_t spiRec(uint32_t chan);
-
-//
 // EEPROM
 //
 
@@ -238,14 +235,14 @@ void eeprom_update_block(const void *__src, void *__dst, size_t __n);
 
 #define HAL_ANALOG_SELECT(pin) pinMode(pin, INPUT_ANALOG);
 
-void HAL_adc_init(void);
+void HAL_adc_init();
 
 #define HAL_START_ADC(pin)  HAL_adc_start_conversion(pin)
 #define HAL_READ_ADC()      HAL_adc_result
 #define HAL_ADC_READY()     true
 
 void HAL_adc_start_conversion(const uint8_t adc_pin);
-uint16_t HAL_adc_get_result(void);
+uint16_t HAL_adc_get_result();
 
 uint16_t analogRead(pin_t pin); // need HAL_ANALOG_SELECT() first
 void analogWrite(pin_t pin, int pwm_val8); // PWM only! mul by 257 in maple!?
@@ -256,3 +253,6 @@ void analogWrite(pin_t pin, int pwm_val8); // PWM only! mul by 257 in maple!?
 
 #define JTAG_DISABLE() afio_cfg_debug_ports(AFIO_DEBUG_SW_ONLY)
 #define JTAGSWD_DISABLE() afio_cfg_debug_ports(AFIO_DEBUG_NONE)
+
+#define PLATFORM_M997_SUPPORT
+void flashFirmware(int16_t value);

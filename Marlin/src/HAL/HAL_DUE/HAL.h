@@ -88,22 +88,11 @@ typedef int8_t pin_t;
 #define ENABLE_ISRS()  __enable_irq()
 #define DISABLE_ISRS() __disable_irq()
 
-void cli(void);                     // Disable interrupts
-void sei(void);                     // Enable interrupts
+void cli();                     // Disable interrupts
+void sei();                     // Enable interrupts
 
-void HAL_clear_reset_source(void);  // clear reset reason
-uint8_t HAL_get_reset_source(void); // get reset reason
-
-//
-// SPI: Extended functions taking a channel number (Hardware SPI only)
-//
-
-// Write single byte to specified SPI channel
-void spiSend(uint32_t chan, byte b);
-// Write buffer to specified SPI channel
-void spiSend(uint32_t chan, const uint8_t* buf, size_t n);
-// Read single byte from specified SPI channel
-uint8_t spiRec(uint32_t chan);
+void HAL_clear_reset_source();  // clear reset reason
+uint8_t HAL_get_reset_source(); // get reset reason
 
 //
 // EEPROM
@@ -124,14 +113,14 @@ extern uint16_t HAL_adc_result;     // result of last ADC conversion
 
 #define HAL_ANALOG_SELECT(pin)
 
-inline void HAL_adc_init(void) {}//todo
+inline void HAL_adc_init() {}//todo
 
 #define HAL_START_ADC(pin)  HAL_adc_start_conversion(pin)
 #define HAL_READ_ADC()      HAL_adc_result
 #define HAL_ADC_READY()     true
 
 void HAL_adc_start_conversion(const uint8_t adc_pin);
-uint16_t HAL_adc_get_result(void);
+uint16_t HAL_adc_get_result();
 
 //
 // Pin Map
@@ -149,8 +138,8 @@ void noTone(const pin_t _pin);
 
 // Enable hooks into idle and setup for HAL
 #define HAL_IDLETASK 1
-void HAL_idletask(void);
-void HAL_init(void);
+void HAL_idletask();
+void HAL_init();
 
 //
 // Utility functions
@@ -159,7 +148,7 @@ void _delay_ms(const int delay);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
-int freeMemory(void);
+int freeMemory();
 #pragma GCC diagnostic pop
 
 #ifdef __cplusplus
