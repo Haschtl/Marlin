@@ -250,7 +250,7 @@
 #define FIL_RUNOUT_PIN     PE15
 #define FIL_RUNOUT_PIN2     PE10
 #define SPINDLE_LASER_ENA_PIN     PG11   // Pin should have a pullup/pulldown!
-#define SPINDLE_LASER_PWM_PIN     PF7   // MUST BE HARDWARE PWM ?
+#define SPINDLE_LASER_PWM_PIN     PC9   // MUST BE HARDWARE PWM ?
 #define SPINDLE_DIR_PIN           PC1
 
 #if ENABLED(CASE_LIGHT_ENABLE) && !defined(CASE_LIGHT_PIN)
