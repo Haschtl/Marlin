@@ -35,10 +35,7 @@ void GcodeSuite::M851() {
 
   // Show usage with no parameters
   if (!parser.seen("XYZ")) {
-    SERIAL_ECHO_START();
-    SERIAL_ECHOLNPAIR(MSG_PROBE_OFFSET " X", probe_offset[X_AXIS],
-                                       " Y", probe_offset[Y_AXIS],
-                                       " Z", probe_offset[Z_AXIS]);
+    SERIAL_ECHOLNPAIR(MSG_PROBE_OFFSET " X", probe_offset[X_AXIS], " Y", probe_offset[Y_AXIS], " Z", probe_offset[Z_AXIS]);
     return;
   }
 
@@ -49,10 +46,16 @@ void GcodeSuite::M851() {
     parser.floatval('Z', probe_offset[Z_AXIS])
   };
 
-  // Error-check
-  if (!WITHIN(offs[X_AXIS], -(X_BED_SIZE), X_BED_SIZE)) {
-    SERIAL_ERROR_MSG("?X out of range (-" STRINGIFY(X_BED_SIZE) " to " STRINGIFY(X_BED_SIZE) ")");
-    return;
+  bool ok = true;
+
+  if (parser.seenval('X')) {
+    const float x = parser.value_float();
+    if (WITHIN(x, -(X_BED_SIZE), X_BED_SIZE))
+      offs[X_AXIS] = x;
+    else {
+      SERIAL_ECHOLNPAIR("?X out of range (-", int(X_BED_SIZE), " to ", int(X_BED_SIZE), ")");
+      ok = false;
+    }
   }
   if (!WITHIN(offs[Y_AXIS], -(Y_BED_SIZE), Y_BED_SIZE)) {
     SERIAL_ERROR_MSG("?Y out of range (-" STRINGIFY(Y_BED_SIZE) " to " STRINGIFY(Y_BED_SIZE) ")");
