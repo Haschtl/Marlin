@@ -39,12 +39,7 @@ void GcodeSuite::M851() {
     return;
   }
 
-  // Get the modified offsets
-  const float offs[] = {
-    parser.floatval('X', probe_offset[X_AXIS]),
-    parser.floatval('Y', probe_offset[Y_AXIS]),
-    parser.floatval('Z', probe_offset[Z_AXIS])
-  };
+  float offs[XYZ] = { probe_offset[X_AXIS], probe_offset[Y_AXIS], probe_offset[Z_AXIS] };
 
   bool ok = true;
 
@@ -57,17 +52,29 @@ void GcodeSuite::M851() {
       ok = false;
     }
   }
-  if (!WITHIN(offs[Y_AXIS], -(Y_BED_SIZE), Y_BED_SIZE)) {
-    SERIAL_ERROR_MSG("?Y out of range (-" STRINGIFY(Y_BED_SIZE) " to " STRINGIFY(Y_BED_SIZE) ")");
-    return;
+
+  if (parser.seenval('Y')) {
+    const float y = parser.value_float();
+    if (WITHIN(y, -(Y_BED_SIZE), Y_BED_SIZE))
+      offs[Y_AXIS] = y;
+    else {
+      SERIAL_ECHOLNPAIR("?Y out of range (-", int(Y_BED_SIZE), " to ", int(Y_BED_SIZE), ")");
+      ok = false;
+    }
   }
-  if (!WITHIN(offs[Z_AXIS], Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX)) {
-    SERIAL_ERROR_MSG("?Z out of range (" STRINGIFY(Z_PROBE_OFFSET_RANGE_MIN) " to " STRINGIFY(Z_PROBE_OFFSET_RANGE_MAX) ")");
-    return;
+
+  if (parser.seenval('Z')) {
+    const float z = parser.value_float();
+    if (WITHIN(z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX))
+      offs[Z_AXIS] = z;
+    else {
+      SERIAL_ECHOLNPAIR("?Z out of range (", int(Z_PROBE_OFFSET_RANGE_MIN), " to ", int(Z_PROBE_OFFSET_RANGE_MAX), ")");
+      ok = false;
+    }
   }
 
   // Save the new offsets
-  LOOP_XYZ(a) probe_offset[a] = offs[a];
+  if (ok) COPY(probe_offset, offs);
 }
 
 #endif // HAS_BED_PROBE
