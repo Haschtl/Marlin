@@ -748,7 +748,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
  * Maximum is dependent on CPU, for ARM ~ 100.000 Steps/s 
  *                                     X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */ 
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 200 ,200 } // { 300, 300, 5, 25}
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 40 ,200 } // { 300, 300, 5, 25}
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
