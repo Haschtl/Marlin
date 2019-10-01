@@ -1,5 +1,5 @@
 /**
-MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
+MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN, SPEAKER, SKEW_CORRECTION, JUNCTION_DEVIATION
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
@@ -1046,7 +1046,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
 
 // @section homing
 
-//#define NO_MOTION_BEFORE_HOMING  // Inhibit movement until all axes have been homed
+#define NO_MOTION_BEFORE_HOMING  // Inhibit movement until all axes have been homed
 
 //#define UNKNOWN_Z_NO_RAISE // Don't raise Z (lower the bed) if Z is "unknown." For beds that fall when Z is powered off.
 
@@ -1189,7 +1189,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
  * Turn on with the command 'M111 S32'.
  * NOTE: Requires a lot of PROGMEM!
  */
-//#define DEBUG_LEVELING_FEATURE
+#define DEBUG_LEVELING_FEATURE
 
 #if ANY(MESH_BED_LEVELING, AUTO_BED_LEVELING_BILINEAR, AUTO_BED_LEVELING_UBL)
   // Gradually reduce leveling correction until a set height is reached,
@@ -1230,13 +1230,13 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
 
     // Beyond the probed grid, continue the implied tilt?
     // Default is to maintain the height of the nearest edge.
-    //#define EXTRAPOLATE_BEYOND_GRID
+    #define EXTRAPOLATE_BEYOND_GRID
 
     //
     // Experimental Subdivision of the grid by Catmull-Rom method.
     // Synthesizes intermediate points to produce a more detailed mesh.
     //
-    //#define ABL_BILINEAR_SUBDIVISION
+    #define ABL_BILINEAR_SUBDIVISION
     #if ENABLED(ABL_BILINEAR_SUBDIVISION)
       // Number of subdivisions between probe points
       #define BILINEAR_SUBDIVISIONS 3
@@ -1250,7 +1250,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
   //========================= Unified Bed Leveling ============================
   //===========================================================================
 
-  //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
+  #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
   #define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
   #define GRID_MAX_POINTS_X 10      // Don't use more than 15 points per axis, implementation limited.
@@ -1369,7 +1369,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
  *    +-------------->X     +-------------->X     +-------------->Y
  *     XY_SKEW_FACTOR        XZ_SKEW_FACTOR        YZ_SKEW_FACTOR
  */
-//#define SKEW_CORRECTION
+#define SKEW_CORRECTION
 
 #if ENABLED(SKEW_CORRECTION)
   // Input all length measurements here:
@@ -1393,7 +1393,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
   #endif
 
   // Enable this option for M852 to set skew at runtime
-  //#define SKEW_CORRECTION_GCODE
+  #define SKEW_CORRECTION_GCODE
 #endif
 
 //=============================================================================
@@ -1431,17 +1431,17 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
 //
 // M100 Free Memory Watcher
 //
-//#define M100_FREE_MEMORY_WATCHER    // Add M100 (Free Memory Watcher) to debug memory usage
+#define M100_FREE_MEMORY_WATCHER    // Add M100 (Free Memory Watcher) to debug memory usage
 
 //
 // G20/G21 Inch mode support
 //
-//#define INCH_MODE_SUPPORT
+#define INCH_MODE_SUPPORT
 
 //
 // M149 Set temperature units support
 //
-//#define TEMPERATURE_UNITS_SUPPORT
+#define TEMPERATURE_UNITS_SUPPORT
 
 // @section temperature
 
@@ -1514,7 +1514,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
  * Attention: EXPERIMENTAL. G-code arguments may change.
  *
  */
-//#define NOZZLE_CLEAN_FEATURE
+#define NOZZLE_CLEAN_FEATURE
 
 #if ENABLED(NOZZLE_CLEAN_FEATURE)
   // Default number of pattern repetitions
@@ -1570,7 +1570,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN
  *
  * View the current statistics with M78.
  */
-//#define PRINTCOUNTER
+#define PRINTCOUNTER
 
 //=============================================================================
 //============================= LCD and SD support ============================
