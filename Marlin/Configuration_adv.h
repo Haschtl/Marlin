@@ -186,7 +186,7 @@
    * Heated chamber watch settings (M141/M191).
    */
   #define WATCH_CHAMBER_TEMP_PERIOD 60            // Seconds
-  #define WATCH_CHAMBER_TEMP_INCREASE 2           // Degrees Celsius
+  #define WATCH_CHAMBER_TEMP_INCREASE 0.1           // Degrees Celsius
 #endif
 
 #if ENABLED(PIDTEMP)
