@@ -2507,26 +2507,20 @@
   #define USER_SCRIPT_AUDIBLE_FEEDBACK
   //#define USER_SCRIPT_RETURN  // Return to status screen after a script
 
-  #define USER_DESC_1 "Vorheizen für " PREHEAT_1_LABEL
-  #define USER_GCODE_1 "M140 S" STRINGIFY(PREHEAT_1_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_1_TEMP_HOTEND)
+  #define USER_DESC_1 "Einfacher Z-Probe"
+  #define USER_GCODE_1 "G30 E0"
 
-  #define USER_DESC_2 "Vorheizen für " PREHEAT_2_LABEL
-  #define USER_GCODE_2 "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nM104 S" STRINGIFY(PREHEAT_2_TEMP_HOTEND)
+  #define USER_DESC_2 "Motortreiber initialisieren"
+  #define USER_GCODE_2 "M81\nM80"
 
-  #define USER_DESC_3 "Bed-Leveling Schnell"
-  #define USER_GCODE_3 "M140 S" STRINGIFY(PREHEAT_2_TEMP_BED) "\nG28\nG29"
+  #define USER_DESC_3 "Unified-Bed-Leveling"
+  #define USER_GCODE_3 "M190 S65\nG28\nG29 P1\nG29 S-1\nG29 A"
 
   #define USER_DESC_4 "Druck-Workspace"
   #define USER_GCODE_4 "G53"
 
   #define USER_DESC_5 "Laser-Workspace"
   #define USER_GCODE_5 "G53\nG28\nG54\nG90\nG1 X0 Y185 Z300\nG92 X0 Y145 Z271\nM500\nG28"
-
-  #define USER_DESC_6 "Home & UBL Info"
-  #define USER_GCODE_6 "G28\nG29 W"
-
-  #define USER_DESC_7 "Home & Info"
-  #define USER_GCODE_7 "G28\nM503"
 #endif
 
 /**
