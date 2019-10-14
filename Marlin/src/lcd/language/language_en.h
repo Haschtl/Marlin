@@ -334,6 +334,13 @@ namespace Language_en {
   PROGMEM Language_Str MSG_PID_C_E3                        = _UxGT("PID-C ") LCD_STR_E3;
   PROGMEM Language_Str MSG_PID_C_E4                        = _UxGT("PID-C ") LCD_STR_E4;
   PROGMEM Language_Str MSG_PID_C_E5                        = _UxGT("PID-C ") LCD_STR_E5;
+  PROGMEM Language_Str MSG_PID_F                           = _UxGT("PID-F");
+  PROGMEM Language_Str MSG_PID_F_E0                        = _UxGT("PID-F ") LCD_STR_E0;
+  PROGMEM Language_Str MSG_PID_F_E1                        = _UxGT("PID-F ") LCD_STR_E1;
+  PROGMEM Language_Str MSG_PID_F_E2                        = _UxGT("PID-F ") LCD_STR_E2;
+  PROGMEM Language_Str MSG_PID_F_E3                        = _UxGT("PID-F ") LCD_STR_E3;
+  PROGMEM Language_Str MSG_PID_F_E4                        = _UxGT("PID-F ") LCD_STR_E4;
+  PROGMEM Language_Str MSG_PID_F_E5                        = _UxGT("PID-F ") LCD_STR_E5;
   PROGMEM Language_Str MSG_SELECT                          = _UxGT("Select");
   PROGMEM Language_Str MSG_SELECT_E0                       = _UxGT("Select ") LCD_STR_E0;
   PROGMEM Language_Str MSG_SELECT_E1                       = _UxGT("Select ") LCD_STR_E1;

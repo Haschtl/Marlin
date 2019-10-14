@@ -359,11 +359,11 @@ void menu_backlash();
       #endif
 
       #if ENABLED(PID_FAN_SCALING)
-        #define _PID_EDIT_MENU_ITEMS(ELABEL, eindex) \
-          _PID_BASE_MENU_ITEMS(ELABEL, eindex); \
-          EDIT_ITEM(float3, MSG_PID_F ELABEL, &PID_PARAM(Kf, eindex), 1, 9990)
+        #define _PID_EDIT_MENU_ITEMS(N) \
+          _PID_BASE_MENU_ITEMS(N); \
+          EDIT_ITEM(float3, PID_LABEL(MSG_PID_F,N), &PID_PARAM(Kf, N), 1, 9990)
       #else
-        #define _PID_EDIT_MENU_ITEMS(ELABEL, eindex) _PID_BASE_MENU_ITEMS(ELABEL, eindex)
+        #define _PID_EDIT_MENU_ITEMS(N) _PID_BASE_MENU_ITEMS(N)
       #endif
 
     #else
