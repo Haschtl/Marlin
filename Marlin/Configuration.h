@@ -71,13 +71,9 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN, TX_
 
 // @section info
 
-// User-specified version info of this build to display in [Pronterface, etc] terminal window during
-// startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
-// build by the user have been successfully uploaded into firmware.
+// Author info of this build printed to the host during boot and M115
 #define STRING_CONFIG_H_AUTHOR "HASCHTL" // Who made the changes.
-//#define SHOW_BOOTSCREEN
-//#define STRING_SPLASH_LINE1 "Kellerdrucker startet" //SHORT_BUILD_VERSION // will be shown during bootup in line 1
-//#define STRING_SPLASH_LINE2 "http://kellerdrucker/" //WEBSITE_URL         // will be shown during bootup in line 2
+//#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
  * *** VENDORS PLEASE READ ***
