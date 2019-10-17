@@ -118,8 +118,9 @@ tags
 # PlatformIO files/dirs
 .piolib
 .piolibdeps
-# .pioenvs
+.pioenvs
 .piolibdeps
+.pio
 .clang_complete
 .gcc-flags.json
 /lib/

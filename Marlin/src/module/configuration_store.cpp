@@ -2982,9 +2982,6 @@ void MarlinSettings::reset() {
               " P", PID_PARAM(Kp, e)
             , " I", unscalePID_i(PID_PARAM(Ki, e))
             , " D", unscalePID_d(PID_PARAM(Kd, e))
-            #if ENABLED(PID_FAN_SCALING)
-              , " F", PID_PARAM(Kf, 0)
-            #endif
           );
           
           #if ENABLED(PID_EXTRUSION_SCALING)

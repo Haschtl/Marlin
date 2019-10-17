@@ -200,9 +200,12 @@
 
   // Add an experimental additional term to the heater power, proportional to the fan speed.
   // A well-chosen Kf value should add just enough power to compensate power losses induced by the cooling fan.
+  // To find a good Kf value, set hotend temperature to target temperature, wait for it to settle and enable the fan (100%).
+  // You will see a temperature drop. Increase the Kf value slowly and repeat the steps above until there is no temperature drop left.
+  // If the temperature overshoots after enabling the fan, the Kf value is too big.
   #define PID_FAN_SCALING
   #if ENABLED(PID_FAN_SCALING)
-    #define DEFAULT_Kf (0.35) //power loss due to cooling=Kf*(fan_speed)
+    #define DEFAULT_Kf (0.04) //power loss due to cooling=Kf*(fan_speed)
   #endif
 #endif
 
