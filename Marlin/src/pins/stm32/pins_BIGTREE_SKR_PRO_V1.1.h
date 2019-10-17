@@ -172,9 +172,9 @@
 #define HEATER_1_PIN       PD14 // Heater1
 #define HEATER_2_PIN       PB0  // Heater1
 #define HEATER_BED_PIN     PD12 // Hotbed
-#define FAN_PIN            PF7 //PD2 //RRD-Expansion1     //PC8  //Fan0
+#define FAN_PIN            PD13 //PF7 //PD2 //RRD-Expansion1     //PC8  //Fan0
 #define FAN1_PIN           PE6 //                     PE5  // Fan1
-#define FAN2_PIN           PD13 //PE0  //RRD-Expansion2 //PE6  // Fan2
+#define FAN2_PIN           PE0  //RRD-Expansion2 //PE6  // Fan2
 
 //
 // Misc. Functions
