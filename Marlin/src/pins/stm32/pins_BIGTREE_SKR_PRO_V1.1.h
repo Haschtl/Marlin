@@ -93,7 +93,7 @@
   #define E1_CS_PIN        PG15
 #endif
 
-#define E2_STEP_PIN        PD13
+#define E2_STEP_PIN        -1 //PD13
 #define E2_DIR_PIN         PG9
 #define E2_ENABLE_PIN      PF0
 #ifndef E2_CS_PIN
@@ -172,9 +172,9 @@
 #define HEATER_1_PIN       PD14 // Heater1
 #define HEATER_2_PIN       PB0  // Heater1
 #define HEATER_BED_PIN     PD12 // Hotbed
-#define FAN_PIN            PD2 //RRD-Expansion1     //PC8  //Fan0
+#define FAN_PIN            PF7 //PD2 //RRD-Expansion1     //PC8  //Fan0
 #define FAN1_PIN           PE6 //                     PE5  // Fan1
-#define FAN2_PIN           PE0  //RRD-Expansion2 //PE6  // Fan2
+#define FAN2_PIN           PD13 //PE0  //RRD-Expansion2 //PE6  // Fan2
 
 //
 // Misc. Functions
@@ -308,3 +308,9 @@
 //#define LCD_PINS_D6  PG6
 //#define LCD_PINS_D7  PG7
 #define CALIBRATION_PIN PC5 // Override in pins.h or set to -1 to use your Z endstop
+
+//free PWM pins: PF7, PC9 (unconfigure PeripheralPins.c), PD13 (E2 Step pin), PB0 (Heater 2)
+
+//Wo am board? PB11, PB5, PB4, PA11, PA10, PA9, PA7, PA6, PA5
+
+//PC8 transistor destroyed
