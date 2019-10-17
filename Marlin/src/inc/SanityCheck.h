@@ -1865,6 +1865,27 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
     static_assert(PWM_PIN(E3_AUTO_FAN_PIN), "E3" AF_ERR_SUFF);
   #endif
 #endif
+#if FAN_COUNT==1
+  #if !PWM_PIN(FAN_PIN)
+    #error "FAN_PIN is not a PWM-pin"
+  #endif
+#endif
+#if FAN_COUNT==2
+  #if !PWM_PIN(FAN1_PIN)
+    #error "FAN1_PIN is not a PWM-pin"
+  #endif
+#endif
+#if FAN_COUNT==3
+  #if !PWM_PIN(FAN2_PIN)
+    #error "FAN2_PIN is not a PWM-pin"
+  #endif
+#endif
+#if FAN_COUNT==4
+  #if !PWM_PIN(FAN3_PIN)
+    #error "FAN3_PIN is not a PWM-pin"
+  #endif
+#endif
+
 
 /**
  * Make sure only one display is enabled
