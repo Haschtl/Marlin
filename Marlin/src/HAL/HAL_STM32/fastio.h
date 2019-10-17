@@ -81,6 +81,9 @@ void FastIO_init(); // Must be called before using fast io macros
 #define IS_OUTPUT(IO)
 
 //#define PWM_PIN(P)              digitalPinHasPWM(P)
+//#define HAS_TIMER(IO)
+//#define HAS_TIMER(IO)         (PIN_MAP[IO].timer_device != NULL)
+//#define PWM_PIN(P)                HAS_TIMER(P)
 #define PWM_PIN(P)              true
 
 // digitalRead/Write wrappers
