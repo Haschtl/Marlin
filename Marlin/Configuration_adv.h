@@ -200,31 +200,35 @@
 
   // Add an experimental additional term to the heater power, proportional to the fan speed.
   // A well-chosen Kf value should add just enough power to compensate for power-loss from the cooling fan.
-  // To find a good Kf value, set the hotend temperature, wait for it to settle, and enable the fan (100%).
-  // You'll see a temperature drop. Repeat the test, increasing the Kf value slowly, until the temperature drop goes away.
-  // If the temperature overshoots after enabling the fan, the Kf value is too big.
-
-  // Full speed: Compensation: 12
-  // Speed 10: compensation 3
+  // 1. To find a good Kf value, set the hotend temperature, wait for it to settle, and enable the fan (100%).
+  //    Make sure PID_FAN_SCALING_LIN_FACTOR is 0 and PID_FAN_SCALING_ALTERNATIVE_DEFINITION is not enabled.
+  //    You'll see a temperature drop. Repeat the test, increasing the Kf value slowly, until the temperature drop goes away.
+  //    If the temperature overshoots after enabling the fan, the Kf value is too big.
+  // 2. Note the Kf-value for fan-speed at 100%
+  // 3. Determine a good value for PID_FAN_SCALING_MIN_SPEED, which is around the speed, where the fan starts moving.
+  // 4. Repeat step 1. and 2. for this fan speed.
+  // 5. Enable PID_FAN_SCALING_ALTERNATIVE_DEFINITION and enter the two identified Kf-values in
+  //    PID_FAN_SCALING_AT_FULL_SPEED and PID_FAN_SCALING_AT_MIN_SPEED. Enter the minimum speed in PID_FAN_SCALING_MIN_SPEED
+  // 6. Parameter-identification finished.
   #define PID_FAN_SCALING
   #if ENABLED(PID_FAN_SCALING)
     #define PID_FAN_SCALING_ALTERNATIVE_DEFINITION
     #if ENABLED(PID_FAN_SCALING_ALTERNATIVE_DEFINITION)
       //The alternative definition is used for an easier configuration. 
-      //Just figure out the PID_FAN_SCALING_CONSTANT at fullspeed and minspeed. 
-      //Kf and the constant are calculated accordingly.
+      //Just figure out Kf at fullspeed (255) and PID_FAN_SCALING_MIN_SPEED. 
+      //DEFAULT_Kf and PID_FAN_SCALING_LIN_FACTOR are calculated accordingly.
 
-      #define PID_FAN_SCALING_AT_FULL_SPEED 13.0      //=DEFAULT_Kf*255+PID_FAN_SCALING_CONSTANT
-      #define PID_FAN_SCALING_AT_MIN_SPEED 6.0 //=DEFAULT_Kf*PID_FAN_SCALING_MIN_SPEED+PID_FAN_SCALING_CONSTANT
-      #define PID_FAN_SCALING_MIN_SPEED 10.0  // Minimum fan speed at which to enable PID_FAN_SCALING
+      #define PID_FAN_SCALING_AT_FULL_SPEED 13.0        //=DEFAULT_Kf*255+PID_FAN_SCALING_CONSTANT
+      #define PID_FAN_SCALING_AT_MIN_SPEED 6.0          //=DEFAULT_Kf*PID_FAN_SCALING_MIN_SPEED+PID_FAN_SCALING_CONSTANT
+      #define PID_FAN_SCALING_MIN_SPEED 10.0            // Minimum fan speed at which to enable PID_FAN_SCALING
 
-      #define PID_FAN_SCALING_CONSTANT (255.0*PID_FAN_SCALING_AT_MIN_SPEED-PID_FAN_SCALING_AT_FULL_SPEED*PID_FAN_SCALING_MIN_SPEED)/(255.0-PID_FAN_SCALING_MIN_SPEED)
-      #define DEFAULT_Kf (PID_FAN_SCALING_AT_FULL_SPEED-PID_FAN_SCALING_CONSTANT)/255.0
+      #define DEFAULT_Kf (255.0*PID_FAN_SCALING_AT_MIN_SPEED-PID_FAN_SCALING_AT_FULL_SPEED*PID_FAN_SCALING_MIN_SPEED)/(255.0-PID_FAN_SCALING_MIN_SPEED)
+      #define PID_FAN_SCALING_LIN_FACTOR (PID_FAN_SCALING_AT_FULL_SPEED-DEFAULT_Kf)/255.0
 
     #else
-      #define DEFAULT_Kf (0.03)             // Power loss due to cooling = Kf * (fan_speed)
-      #define PID_FAN_SCALING_CONSTANT 10   // A constant value added to the PID-tuner
-      #define PID_FAN_SCALING_MIN_SPEED 10  // Minimum fan speed at which to enable PID_FAN_SCALING
+      #define PID_FAN_SCALING_LIN_FACTOR (0)             // Power loss due to cooling = Kf * (fan_speed)
+      #define DEFAULT_Kf 10                              // A constant value added to the PID-tuner
+      #define PID_FAN_SCALING_MIN_SPEED 10               // Minimum fan speed at which to enable PID_FAN_SCALING
     #endif
   #endif
 #endif

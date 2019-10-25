@@ -849,17 +849,17 @@ void Temperature::min_temp_error(const heater_ind_t heater) {
             }
         #endif // PID_EXTRUSION_SCALING
 		
-		#if ENABLED(PID_FAN_SCALING)
-          if (thermalManager.fan_speed[active_extruder] > PID_FAN_SCALING_MIN_SPEED) {
-              if (PID_PARAM(Kf, ee) != 0) {
-                work_pid[ee].Kf = thermalManager.fan_speed[active_extruder] * PID_PARAM(Kf, ee) + PID_FAN_SCALING_CONSTANT;
+		    #if ENABLED(PID_FAN_SCALING)
+            if (thermalManager.fan_speed[active_extruder] > PID_FAN_SCALING_MIN_SPEED) {
+              if (PID_FAN_SCALING_LIN_FACTOR == 0) {
+                work_pid[ee].Kf = PID_PARAM(Kf, ee);
               }
-              else {
-                work_pid[ee].Kf = PID_FAN_SCALING_CONSTANT;
+              else{
+                work_pid[ee].Kf = thermalManager.fan_speed[active_extruder] * PID_FAN_SCALING_LIN_FACTOR + PID_PARAM(Kf, ee);
               }
             pid_output += work_pid[ee].Kf;
             }
-        #endif // PID_FAN_SCALING
+         #endif
 
         LIMIT(pid_output, 0, PID_MAX);
         }
