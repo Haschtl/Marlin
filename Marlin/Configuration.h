@@ -1,5 +1,5 @@
 /**
-MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN, TX_BUFFER_SIZE, FAST_PWM_FAN
+MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_FAN
 # Not sure if this causes problems: ENDSTOP_INTERRUPTS_FEATURE
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
@@ -744,11 +744,11 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN, TX_
  * Maximum is dependent on CPU, for ARM ~ 100.000 Steps/s 
  *                                     X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */ 
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 40 ,200 } // { 300, 300, 5, 25}
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 30 ,200 } // { 300, 300, 5, 25}
 
-//#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
+#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
-  #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 10, 50 } // ...or, set your own edit limits
+  #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 40, 300 } // ...or, set your own edit limits
 #endif
 
 /**
@@ -757,9 +757,9 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, CHAMBER_AUTO_FAN_PIN, TX_
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000, 10000 }
+#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 8000, 8000 }
 
-//#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
+#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
   #define MAX_ACCEL_EDIT_VALUES       { 6000, 6000, 200, 20000 } // ...or, set your own edit limits
 #endif
