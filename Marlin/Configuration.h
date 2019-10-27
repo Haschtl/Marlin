@@ -729,6 +729,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
 // New Kellerdrucker: Kalibriert an Schlitten
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 323.2869, 320.5653, 1997.5115, 1747.2445, 387.317} // { 80, 80, 4000, 500 }
 // New Kellerdrucker: Kalibriert mit Laser
+// Old E0: 1747.2445   new: 873.62225 (16microstep)
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { 319.0331, 319.1447, 1997.5115, 1747.2445, 387.317} // { 80, 80, 4000, 500 }
 // X: 400x32x
 // Y: 400x32x
@@ -745,11 +746,11 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
  * Maximum is dependent on CPU, for ARM ~ 100.000 Steps/s 
  *                                     X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */ 
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 30 ,200 } // { 300, 300, 5, 25}
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 50 ,200 } // { 300, 300, 5, 25}
 
 #define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
-  #define MAX_FEEDRATE_EDIT_VALUES    { 500, 500, 30, 30 } // ...or, set your own edit limits
+  #define MAX_FEEDRATE_EDIT_VALUES    { 500, 500, 30, 200 } // ...or, set your own edit limits
 #endif
 
 /**
@@ -758,7 +759,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 8000, 8000 }
+#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 800, 8000 }
 
 #define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
