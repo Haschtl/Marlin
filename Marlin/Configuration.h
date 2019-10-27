@@ -1,6 +1,7 @@
 /**
 MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_FAN
 # Not sure if this causes problems: ENDSTOP_INTERRUPTS_FEATURE
+# Maybe SKEW_CORRECTION or BACKLASH_COMPENSATION or BED MESH causes fragments in lowest layer
  * Marlin 3D Printer Firmware
  * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
@@ -748,7 +749,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
 
 #define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
-  #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 40, 300 } // ...or, set your own edit limits
+  #define MAX_FEEDRATE_EDIT_VALUES    { 500, 500, 30, 30 } // ...or, set your own edit limits
 #endif
 
 /**
@@ -761,7 +762,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
 
 #define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
-  #define MAX_ACCEL_EDIT_VALUES       { 6000, 6000, 200, 20000 } // ...or, set your own edit limits
+  #define MAX_ACCEL_EDIT_VALUES       { 3000, 3000, 100, 8000 } // ...or, set your own edit limits
 #endif
 
 /**
@@ -1382,9 +1383,9 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
 
 #if ENABLED(SKEW_CORRECTION)
   // Input all length measurements here:
-  #define XY_DIAG_AC 282.8427124746
-  #define XY_DIAG_BD 282.8427124746
-  #define XY_SIDE_AD 200
+  //#define XY_DIAG_AC 282.8427124746
+  //#define XY_DIAG_BD 282.8427124746
+  //#define XY_SIDE_AD 200
 
   // Or, set the default skew factors directly here
   // to override the above measurements:
