@@ -37,7 +37,7 @@
  */
 
 // Change EEPROM version if the structure changes
-#define EEPROM_VERSION "V72"
+#define EEPROM_VERSION "V73"
 #define EEPROM_OFFSET 100
 
 // Check the integrity of data offsets.
@@ -242,7 +242,7 @@ typedef struct SettingsDataStruct {
   //
   // PIDTEMP
   //
-  PIDCF_t hotendPID[HOTENDS];                            // M301 En PIDCF / M303 En U
+  PIDCF_t hotendPID[HOTENDS];                           // M301 En PIDCF / M303 En U
   int16_t lpq_len;                                      // M301 L
 
   //
@@ -2450,8 +2450,8 @@ void MarlinSettings::reset() {
       #if ENABLED(PID_EXTRUSION_SCALING)
         PID_PARAM(Kc, e) = DEFAULT_Kc;
       #endif
-	  
-	  #if ENABLED(PID_FAN_SCALING)
+
+      #if ENABLED(PID_FAN_SCALING)
         PID_PARAM(Kf, e) = DEFAULT_Kf;
       #endif
     }
@@ -3012,9 +3012,8 @@ void MarlinSettings::reset() {
             SERIAL_ECHOPAIR(" C", PID_PARAM(Kc, e));
             if (e == 0) SERIAL_ECHOPAIR(" L", thermalManager.lpq_len);
           #endif
-          
           #if ENABLED(PID_FAN_SCALING)
-                SERIAL_ECHOPAIR(" F", PID_PARAM(Kf, e));
+            SERIAL_ECHOPAIR(" F", PID_PARAM(Kf, e));
           #endif
           SERIAL_EOL();
         }
