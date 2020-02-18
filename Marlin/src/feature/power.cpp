@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -31,7 +31,7 @@
 #include "power.h"
 #include "../module/temperature.h"
 #include "../module/stepper/indirection.h"
-#include "../Marlin.h"
+#include "../MarlinCore.h"
 
 Power powerManager;
 
@@ -109,7 +109,7 @@ void Power::power_on() {
     PSU_PIN_ON();
 
     #if HAS_TRINAMIC
-      delay(100); // Wait for power to settle
+      delay(PSU_POWERUP_DELAY); // Wait for power to settle
       restore_stepper_drivers();
     #endif
   }

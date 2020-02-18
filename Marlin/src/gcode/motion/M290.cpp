@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -46,9 +46,9 @@
         && active_extruder == 0
       #endif
     ) {
-      probe_offset.z += offs;
+      probe.offset.z += offs;
       SERIAL_ECHO_START();
-      SERIAL_ECHOLNPAIR(MSG_PROBE_OFFSET MSG_Z ": ", probe_offset.z);
+      SERIAL_ECHOLNPAIR(MSG_PROBE_OFFSET MSG_Z ": ", probe.offset.z);
     }
     else {
       #if ENABLED(BABYSTEP_HOTEND_Z_OFFSET)
@@ -98,17 +98,21 @@ void GcodeSuite::M290() {
     SERIAL_ECHO_START();
 
     #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
-      SERIAL_ECHOLNPAIR(MSG_PROBE_OFFSET " " MSG_Z, probe_offset.z);
+      SERIAL_ECHOLNPAIR(MSG_PROBE_OFFSET " " MSG_Z, probe.offset.z);
     #endif
 
     #if ENABLED(BABYSTEP_HOTEND_Z_OFFSET)
     {
-      SERIAL_ECHOLNPAIR("Hotend ", int(active_extruder), "Offset"
+      SERIAL_ECHOLNPAIR_P(
+        PSTR("Hotend "), int(active_extruder)
         #if ENABLED(BABYSTEP_XY)
-          " X", hotend_offset[active_extruder].x,
-          " Y", hotend_offset[active_extruder].y,
+          , PSTR("Offset X"), hotend_offset[active_extruder].x
+          , SP_Y_STR, hotend_offset[active_extruder].y
+          , SP_Z_STR
+        #else
+          , PSTR("Offset Z")
         #endif
-        " Z", hotend_offset[active_extruder].z
+        , hotend_offset[active_extruder].z
       );
     }
     #endif
@@ -119,12 +123,15 @@ void GcodeSuite::M290() {
 
     #if ENABLED(BABYSTEP_DISPLAY_TOTAL)
     {
-      SERIAL_ECHOLNPAIR("Babystep"
+      SERIAL_ECHOLNPAIR_P(
         #if ENABLED(BABYSTEP_XY)
-          " X", babystep.axis_total[X_AXIS],
-          " Y", babystep.axis_total[Y_AXIS],
+            PSTR("Babystep X"), babystep.axis_total[X_AXIS]
+          , SP_Y_STR, babystep.axis_total[Y_AXIS]
+          , SP_Z_STR
+        #else
+          PSTR("Babystep Z")
         #endif
-        " Z", babystep.axis_total[BS_TODO_AXIS(Z_AXIS)]
+        , babystep.axis_total[BS_TODO_AXIS(Z_AXIS)]
       );
     }
     #endif

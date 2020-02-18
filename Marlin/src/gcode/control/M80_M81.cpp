@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -32,7 +32,7 @@
 #endif
 
 #if HAS_SUICIDE
-  #include "../../Marlin.h"
+  #include "../../MarlinCore.h"
 #endif
 
 #if ENABLED(PSU_CONTROL)
@@ -72,7 +72,7 @@
     #endif
 
     #if DISABLED(AUTO_POWER_CONTROL)
-      delay(100); // Wait for power to settle
+      delay(PSU_POWERUP_DELAY); // Wait for power to settle
       restore_stepper_drivers();
     #endif
 

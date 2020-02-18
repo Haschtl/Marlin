@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
@@ -20,7 +20,7 @@
  *
  */
 
-#include "../../Marlin.h"
+#include "../../MarlinCore.h"
 
 #if ENABLED(CALIBRATION_GCODE)
 
@@ -128,13 +128,15 @@ inline void park_above_object(measurements_t &m, const float uncertainty) {
 #endif
 
 inline bool read_calibration_pin() {
-  #if HAS_CALIBRATION_PIN
-    return (READ(CALIBRATION_PIN) != CALIBRATION_PIN_INVERTING);
-  #elif ENABLED(Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN)
-    return (READ(Z_MIN_PIN) != Z_MIN_ENDSTOP_INVERTING);
-  #else
-    return (READ(Z_MIN_PROBE_PIN) != Z_MIN_PROBE_ENDSTOP_INVERTING);
-  #endif
+  return (
+    #if PIN_EXISTS(CALIBRATION)
+      READ(CALIBRATION_PIN) != CALIBRATION_PIN_INVERTING
+    #elif HAS_CUSTOM_PROBE_PIN
+      READ(Z_MIN_PROBE_PIN) != Z_MIN_PROBE_ENDSTOP_INVERTING
+    #else
+      READ(Z_MIN_PIN) != Z_MIN_ENDSTOP_INVERTING
+    #endif
+  );
 }
 
 /**
@@ -326,12 +328,12 @@ inline void probe_sides(measurements_t &m, const float uncertainty) {
   inline void report_measured_center(const measurements_t &m) {
     SERIAL_ECHOLNPGM("Center:");
     #if HAS_X_CENTER
-      SERIAL_ECHOLNPAIR(" X", m.obj_center.x);
+      SERIAL_ECHOLNPAIR_P(SP_X_STR, m.obj_center.x);
     #endif
     #if HAS_Y_CENTER
-      SERIAL_ECHOLNPAIR(" Y", m.obj_center.y);
+      SERIAL_ECHOLNPAIR_P(SP_Y_STR, m.obj_center.y);
     #endif
-    SERIAL_ECHOLNPAIR(" Z", m.obj_center.z);
+    SERIAL_ECHOLNPAIR_P(SP_Z_STR, m.obj_center.z);
     SERIAL_EOL();
   }
 
@@ -358,12 +360,12 @@ inline void probe_sides(measurements_t &m, const float uncertainty) {
     SERIAL_ECHO(int(active_extruder));
     SERIAL_ECHOLNPGM(" Positional Error:");
     #if HAS_X_CENTER
-      SERIAL_ECHOLNPAIR(" X", m.pos_error.x);
+      SERIAL_ECHOLNPAIR_P(SP_X_STR, m.pos_error.x);
     #endif
     #if HAS_Y_CENTER
-      SERIAL_ECHOLNPAIR(" Y", m.pos_error.y);
+      SERIAL_ECHOLNPAIR_P(SP_Y_STR, m.pos_error.y);
     #endif
-    SERIAL_ECHOLNPAIR(" Z", m.pos_error.z);
+    SERIAL_ECHOLNPAIR_P(SP_Z_STR, m.pos_error.z);
     SERIAL_EOL();
   }
 
@@ -371,10 +373,10 @@ inline void probe_sides(measurements_t &m, const float uncertainty) {
     SERIAL_ECHOLNPGM("Nozzle Tip Outer Dimensions:");
     #if HAS_X_CENTER || HAS_Y_CENTER
       #if HAS_X_CENTER
-        SERIAL_ECHOLNPAIR(" X", m.nozzle_outer_dimension.x);
+        SERIAL_ECHOLNPAIR_P(SP_X_STR, m.nozzle_outer_dimension.x);
       #endif
       #if HAS_Y_CENTER
-        SERIAL_ECHOLNPAIR(" Y", m.nozzle_outer_dimension.y);
+        SERIAL_ECHOLNPAIR_P(SP_Y_STR, m.nozzle_outer_dimension.y);
       #endif
     #else
       UNUSED(m);
@@ -388,7 +390,7 @@ inline void probe_sides(measurements_t &m, const float uncertainty) {
     //
     inline void report_hotend_offsets() {
       for (uint8_t e = 1; e < HOTENDS; e++)
-        SERIAL_ECHOLNPAIR("T", int(e), " Hotend Offset X", hotend_offset[e].x, " Y", hotend_offset[e].y, " Z", hotend_offset[e].z);
+        SERIAL_ECHOLNPAIR_P(PSTR("T"), int(e), PSTR(" Hotend Offset X"), hotend_offset[e].x, SP_Y_STR, hotend_offset[e].y, SP_Z_STR, hotend_offset[e].z);
     }
   #endif
 
