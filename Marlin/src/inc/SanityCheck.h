@@ -452,9 +452,6 @@
   #error "Z_QUAD_ENDSTOPS is now Z_MULTI_ENDSTOPS. Please update Configuration_adv.h."
 #endif
 
-// #if defined(PID_FAN_SCALING) && FAN_COUNT<=0
-//   #error "PID_FAN_SCALING needs at least one fan enabled."
-// #endif
 /**
  * Marlin release, version and default string
  */
