@@ -31,7 +31,7 @@
 
 // Use one of these or SDCard-based Emulation will be used
 //#define SRAM_EEPROM_EMULATION                   // Use BackSRAM-based EEPROM emulation
-//#define FLASH_EEPROM_EMULATION                  // Use Flash-based EEPROM emulation
+#define FLASH_EEPROM_EMULATION                    // Use Flash-based EEPROM emulation
 
 //
 // Servos
@@ -42,11 +42,11 @@
 // Limit Switches
 //
 #define X_MIN_PIN                           PB10
-#define X_MAX_PIN                           PE15
-#define Y_MIN_PIN                           PE12
-#define Y_MAX_PIN                           PE10
-#define Z_MIN_PIN                           PG8
-#define Z_MAX_PIN                           PG5
+#define X_MAX_PIN                           -1 //PE15
+#define Y_MIN_PIN                           -1 //PE12
+#define Y_MAX_PIN                           PE12 //PE10
+#define Z_MIN_PIN                           PG5 //PG8
+#define Z_MAX_PIN                           PG8 //PG5
 
 //
 // Z Probe must be this pins
@@ -93,7 +93,7 @@
   #define E1_CS_PIN                         PG15
 #endif
 
-#define E2_STEP_PIN                         PD13
+#define E2_STEP_PIN                         -1 //PD13
 #define E2_DIR_PIN                          PG9
 #define E2_ENABLE_PIN                       PF0
 #ifndef E2_CS_PIN
@@ -162,10 +162,11 @@
 //
 // Temperature Sensors
 //
-#define TEMP_0_PIN                          PF4   // T1 <-> E0
-#define TEMP_1_PIN                          PF5   // T2 <-> E1
-#define TEMP_2_PIN                          PF6   // T3 <-> E2
-#define TEMP_BED_PIN                        PF3   // T0 <-> Bed
+//#define TEMP_0_PIN                          PF4   // T1 <-> E0
+#define TEMP_1_PIN                            PF5   // T2 <-> E1
+//#define TEMP_2_PIN                          PF6   // T3 <-> E2
+#define TEMP_BED_PIN                          PF3   // T0 <-> Bed
+#define TEMP_CHAMBER_PIN                      PF6
 
 //
 // Heaters / Fans
@@ -174,9 +175,9 @@
 #define HEATER_1_PIN                        PD14  // Heater1
 #define HEATER_2_PIN                        PB0   // Heater1
 #define HEATER_BED_PIN                      PD12  // Hotbed
-#define FAN_PIN                             PC8   // Fan0
-#define FAN1_PIN                            PE5   // Fan1
-#define FAN2_PIN                            PE6   // Fan2
+#define FAN_PIN                             PD13  // Fan0    //RRD-Expansion1 //PF7 //PD2 //PC8  
+#define FAN1_PIN                            PE6   // Fan1                     //PE5 
+#define FAN2_PIN                            PE0   // Fan2    //RRD-Expansion2 //PE6  
 
 //
 // Misc. Functions
@@ -191,7 +192,7 @@
 //   NOT compatible with LCD
 //
 #if SDCARD_CONNECTION == ONBOARD && !HAS_SPI_LCD
-  #define SOFTWARE_SPI                            // Use soft SPI for onboard SD
+  #define SOFTWARE_SPI                               // Use soft SPI for onboard SD
   #define SDSS                              PA4
   #define SCK_PIN                           PA5
   #define MISO_PIN                          PA6
@@ -282,3 +283,47 @@
   #endif
 
 #endif // HAS_SPI_LCD
+
+
+#define TEMP_0_PIN                         PF7   //PF9
+#define PS_ON_PIN                          PG13
+#define FIL_RUNOUT_PIN                     PE15
+#define FIL_RUNOUT2_PIN                    PE10
+#define SPINDLE_LASER_ENA_PIN              PG11  // Pin should have a pullup/pulldown!
+#define SPINDLE_LASER_PWM_PIN              PF9   //PC9   // MUST BE HARDWARE PWM ?
+#define SPINDLE_DIR_PIN                    PC1
+
+#if ENABLED(CASE_LIGHT_ENABLE) && !defined(CASE_LIGHT_PIN)
+  #define CASE_LIGHT_PIN                   PF8  // MUST BE HARDWARE PWM
+#endif
+
+//#ifndef FILWIDTH_PIN
+//  #define FILWIDTH_PIN                   PF10 // Analog Input on AUX2
+//#endif
+
+//#define BEEPER_PIN                       PC9
+#define BEEPER_PIN                         PG4
+
+#define CONTROLLER_FAN_PIN                 PE5  // Set a custom pin for the controller fan
+
+//#define E0_AUTO_FAN_PIN                  PD3
+//#define E1_AUTO_FAN_PIN                  PD3
+//#define CHAMBER_AUTO_FAN_PIN             PE6
+
+//define LCD_SDSS                          -1
+//#define LCD_SDSS                         PB12
+#define BTN_EN1                            PG10
+#define BTN_EN2                            PF11 // A2 - rotary encoder B
+#define BTN_ENC                            PA8  // A3 - rotary encoder push switch
+
+// I2C Display is connected to I2C 1
+//#define LCD_PINS_D5                      PG3
+//#define LCD_PINS_D6                      PG6
+//#define LCD_PINS_D7                      PG7
+#define CALIBRATION_PIN                    PC5  // Override in pins.h or set to -1 to use your Z endstop
+
+//free PWM pins: PF7, PC9 (unconfigure PeripheralPins.c), PD13 (E2 Step pin), PB0 (Heater 2)
+
+//Wo am board? PB11, PB5, PB4, PA11, PA10, PA9, PA7, PA6, PA5
+
+//PC8 transistor destroyed
