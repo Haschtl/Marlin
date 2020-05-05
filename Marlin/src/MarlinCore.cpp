@@ -30,6 +30,14 @@
 
 #include "MarlinCore.h"
 
+#include "HAL/shared/Delay.h"
+#include "HAL/shared/esp_wifi.h"
+
+#ifdef ARDUINO
+  #include <pins_arduino.h>
+#endif
+#include <math.h>
+
 #include "core/utility.h"
 #include "lcd/ultralcd.h"
 #include "module/motion.h"
@@ -43,14 +51,8 @@
 #include "module/printcounter.h" // PrintCounter or Stopwatch
 #include "feature/closedloop.h"
 
-#include "HAL/shared/Delay.h"
-
 #include "module/stepper/indirection.h"
 
-#ifdef ARDUINO
-  #include <pins_arduino.h>
-#endif
-#include <math.h>
 #include "libs/nozzle.h"
 
 #include "gcode/gcode.h"
@@ -69,7 +71,7 @@
   #include "libs/buzzer.h"
 #endif
 
-#if ENABLED(DIGIPOT_I2C)
+#if HAS_I2C_DIGIPOT
   #include "feature/digipot/digipot.h"
 #endif
 
@@ -212,19 +214,12 @@ bool wait_for_heatup = true;
   bool wait_for_user; // = false;
 
   void wait_for_user_response(millis_t ms/*=0*/, const bool no_sleep/*=false*/) {
-    #if DISABLED(ADVANCED_PAUSE_FEATURE)
-      UNUSED(no_sleep);
-    #endif
+    TERN(ADVANCED_PAUSE_FEATURE,,UNUSED(no_sleep));
     KEEPALIVE_STATE(PAUSED_FOR_USER);
     wait_for_user = true;
     if (ms) ms += millis(); // expire time
-    while (wait_for_user && !(ms && ELAPSED(millis(), ms))) {
-      idle(
-        #if ENABLED(ADVANCED_PAUSE_FEATURE)
-          no_sleep
-        #endif
-      );
-    }
+    while (wait_for_user && !(ms && ELAPSED(millis(), ms)))
+      idle(TERN_(ADVANCED_PAUSE_FEATURE, no_sleep));
     wait_for_user = false;
   }
 
@@ -232,7 +227,7 @@ bool wait_for_heatup = true;
 
 // Inactivity shutdown
 millis_t max_inactive_time, // = 0
-         stepper_inactive_time = (DEFAULT_STEPPER_DEACTIVE_TIME) * 1000UL;
+         stepper_inactive_time = SEC_TO_MS(DEFAULT_STEPPER_DEACTIVE_TIME);
 
 #if PIN_EXISTS(CHDK)
   extern millis_t chdk_timeout;
@@ -250,7 +245,11 @@ millis_t max_inactive_time, // = 0
 
 void setup_killpin() {
   #if HAS_KILL
-    SET_INPUT_PULLUP(KILL_PIN);
+    #if KILL_PIN_STATE
+      SET_INPUT_PULLDOWN(KILL_PIN);
+    #else
+      SET_INPUT_PULLUP(KILL_PIN);
+    #endif
   #endif
 }
 
@@ -290,6 +289,9 @@ void setup_powerhold() {
 
 #include "pins/sensitive_pins.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnarrowing"
+
 bool pin_is_protected(const pin_t pin) {
   static const pin_t sensitive_pins[] PROGMEM = SENSITIVE_PINS;
   LOOP_L_N(i, COUNT(sensitive_pins)) {
@@ -299,6 +301,8 @@ bool pin_is_protected(const pin_t pin) {
   }
   return false;
 }
+
+#pragma GCC diagnostic pop
 
 void protected_pin_err() {
   SERIAL_ERROR_MSG(STR_ERR_PROTECTED_PIN);
@@ -317,9 +321,7 @@ void enable_e_steppers() {
 }
 
 void enable_all_steppers() {
-  #if ENABLED(AUTO_POWER_CONTROL)
-    powerManager.power_on();
-  #endif
+  TERN_(AUTO_POWER_CONTROL, powerManager.power_on());
   ENABLE_AXIS_X();
   ENABLE_AXIS_Y();
   ENABLE_AXIS_Z();
@@ -363,9 +365,7 @@ void disable_all_steppers() {
   }
 
   void event_probe_recover() {
-    #if ENABLED(HOST_PROMPT_SUPPORT)
-      host_prompt_do(PROMPT_INFO, PSTR("G29 Retrying"), DISMISS_STR);
-    #endif
+    TERN_(HOST_PROMPT_SUPPORT, host_prompt_do(PROMPT_INFO, PSTR("G29 Retrying"), DISMISS_STR));
     #ifdef ACTION_ON_G29_RECOVER
       host_action(PSTR(ACTION_ON_G29_RECOVER));
     #endif
@@ -398,12 +398,8 @@ bool printingIsPaused() {
 
 void startOrResumeJob() {
   if (!printingIsPaused()) {
-    #if ENABLED(CANCEL_OBJECTS)
-      cancelable.reset();
-    #endif
-    #if ENABLED(LCD_SHOW_E_TOTAL)
-      e_move_accumulator = 0;
-    #endif
+    TERN_(CANCEL_OBJECTS, cancelable.reset());
+    TERN_(LCD_SHOW_E_TOTAL, e_move_accumulator = 0);
     #if BOTH(LCD_SET_PROGRESS_MANUALLY, USE_M73_REMAINING_TIME)
       ui.reset_remaining_time();
     #endif
@@ -414,22 +410,20 @@ void startOrResumeJob() {
 #if ENABLED(SDSUPPORT)
 
   inline void abortSDPrinting() {
-    card.endFilePrint(
-      #if SD_RESORT
-        true
-      #endif
-    );
+    card.endFilePrint(TERN_(SD_RESORT, true));
     queue.clear();
     quickstop_stepper();
     print_job_timer.stop();
     #if DISABLED(SD_ABORT_NO_COOLDOWN)
       thermalManager.disable_all_heaters();
     #endif
-    thermalManager.zero_fan_speeds();
-    wait_for_heatup = false;
-    #if ENABLED(POWER_LOSS_RECOVERY)
-      recovery.purge();
+    #if !HAS_CUTTER
+      thermalManager.zero_fan_speeds();
+    #else
+      cutter.kill();              // Full cutter shutdown including ISR control
     #endif
+    wait_for_heatup = false;
+    TERN_(POWER_LOSS_RECOVERY, recovery.purge());
     #ifdef EVENT_GCODE_SD_STOP
       queue.inject_P(PSTR(EVENT_GCODE_SD_STOP));
     #endif
@@ -444,7 +438,6 @@ void startOrResumeJob() {
 
 /**
  * Minimal management of Marlin's core activities:
- *  - Check for Filament Runout
  *  - Keep the command buffer full
  *  - Check for maximum inactive time between commands
  *  - Check for maximum inactive time between stepper commands
@@ -455,12 +448,7 @@ void startOrResumeJob() {
  *  - Check if an idle but hot extruder needs filament extruded (EXTRUDER_RUNOUT_PREVENT)
  *  - Pulse FET_SAFETY_PIN if it exists
  */
-
 inline void manage_inactivity(const bool ignore_stepper_queue=false) {
-
-  #if HAS_FILAMENT_SENSOR
-    runout.run();
-  #endif
 
   if (queue.length < BUFSIZE) queue.get_available_commands();
 
@@ -486,7 +474,7 @@ inline void manage_inactivity(const bool ignore_stepper_queue=false) {
         if (ENABLED(DISABLE_INACTIVE_Y)) DISABLE_AXIS_Y();
         if (ENABLED(DISABLE_INACTIVE_Z)) DISABLE_AXIS_Z();
         if (ENABLED(DISABLE_INACTIVE_E)) disable_e_steppers();
-        #if HAS_LCD_MENU && ENABLED(AUTO_BED_LEVELING_UBL)
+        #if BOTH(HAS_LCD_MENU, AUTO_BED_LEVELING_UBL)
           if (ubl.lcd_map_control) {
             ubl.lcd_map_control = false;
             ui.defer_status_screen(false);
@@ -512,7 +500,7 @@ inline void manage_inactivity(const bool ignore_stepper_queue=false) {
     // -------------------------------------------------------------------------------
     static int killCount = 0;   // make the inactivity button a bit less responsive
     const int KILL_DELAY = 750;
-    if (!READ(KILL_PIN))
+    if (kill_state())
       killCount++;
     else if (killCount > 0)
       killCount--;
@@ -540,17 +528,13 @@ inline void manage_inactivity(const bool ignore_stepper_queue=false) {
     }
   #endif
 
-  #if ENABLED(USE_CONTROLLER_FAN)
-    controllerFan.update(); // Check if fan should be turned on to cool stepper drivers down
-  #endif
+  TERN_(USE_CONTROLLER_FAN, controllerFan.update()); // Check if fan should be turned on to cool stepper drivers down
 
-  #if ENABLED(AUTO_POWER_CONTROL)
-    powerManager.check();
-  #endif
+  TERN_(AUTO_POWER_CONTROL, powerManager.check());
 
   #if ENABLED(EXTRUDER_RUNOUT_PREVENT)
     if (thermalManager.degHotend(active_extruder) > EXTRUDER_RUNOUT_MINTEMP
-      && ELAPSED(ms, gcode.previous_move_ms + (EXTRUDER_RUNOUT_SECONDS) * 1000UL)
+      && ELAPSED(ms, gcode.previous_move_ms + SEC_TO_MS(EXTRUDER_RUNOUT_SECONDS))
       && !planner.has_blocks_queued()
     ) {
       #if ENABLED(SWITCHING_EXTRUDER)
@@ -614,17 +598,11 @@ inline void manage_inactivity(const bool ignore_stepper_queue=false) {
     }
   #endif
 
-  #if ENABLED(TEMP_STAT_LEDS)
-    handle_status_leds();
-  #endif
+  TERN_(TEMP_STAT_LEDS, handle_status_leds());
 
-  #if ENABLED(MONITOR_DRIVER_STATUS)
-    monitor_tmc_drivers();
-  #endif
+  TERN_(MONITOR_DRIVER_STATUS, monitor_tmc_drivers());
 
-  #if ENABLED(MONITOR_L6470_DRIVER_STATUS)
-    L64xxManager.monitor_driver();
-  #endif
+  TERN_(MONITOR_L6470_DRIVER_STATUS, L64xxManager.monitor_driver());
 
   // Limit check_axes_activity frequency to 10Hz
   static millis_t next_check_axes_ms = 0;
@@ -645,54 +623,81 @@ inline void manage_inactivity(const bool ignore_stepper_queue=false) {
 }
 
 /**
- * Standard idle routine keeps the machine alive
+ * Standard idle routine keeps the machine alive:
+ *  - Core Marlin activities
+ *  - Manage heaters (and Watchdog)
+ *  - Max7219 heartbeat, animation, etc.
+ *
+ *  Only after setup() is complete:
+ *  - Handle filament runout sensors
+ *  - Run HAL idle tasks
+ *  - Handle Power-Loss Recovery
+ *  - Run StallGuard endstop checks
+ *  - Handle SD Card insert / remove
+ *  - Handle USB Flash Drive insert / remove
+ *  - Announce Host Keepalive state (if any)
+ *  - Update the Print Job Timer state
+ *  - Update the Beeper queue
+ *  - Read Buttons and Update the LCD
+ *  - Run i2c Position Encoders
+ *  - Auto-report Temperatures / SD Status
+ *  - Update the Prusa MMU2
+ *  - Handle Joystick jogging
  */
-void idle(
-  #if ENABLED(ADVANCED_PAUSE_FEATURE)
-    bool no_stepper_sleep/*=false*/
+void idle(TERN_(ADVANCED_PAUSE_FEATURE, bool no_stepper_sleep/*=false*/)) {
+
+  // Core Marlin activities
+  manage_inactivity(TERN_(ADVANCED_PAUSE_FEATURE, no_stepper_sleep));
+
+  // Manage Heaters (and Watchdog)
+  thermalManager.manage_heater();
+
+  // Max7219 heartbeat, animation, etc
+  TERN_(MAX7219_DEBUG, max7219.idle_tasks());
+
+  // Return if setup() isn't completed
+  if (marlin_state == MF_INITIALIZING) return;
+
+  // Handle filament runout sensors
+  TERN_(HAS_FILAMENT_SENSOR, runout.run());
+
+  // Run HAL idle tasks
+  #ifdef HAL_IDLETASK
+    HAL_idletask();
   #endif
-) {
+
+  // Handle Power-Loss Recovery
   #if ENABLED(POWER_LOSS_RECOVERY) && PIN_EXISTS(POWER_LOSS)
     recovery.outage();
   #endif
 
+  // Run StallGuard endstop checks
   #if ENABLED(SPI_ENDSTOPS)
     if (endstops.tmc_spi_homing.any
-      #if ENABLED(IMPROVE_HOMING_RELIABILITY)
-        && ELAPSED(millis(), sg_guard_period)
-      #endif
-    ) {
-      for (uint8_t i = 4; i--;) // Read SGT 4 times per idle loop
+      && TERN1(IMPROVE_HOMING_RELIABILITY, ELAPSED(millis(), sg_guard_period))
+    ) LOOP_L_N(i, 4) // Read SGT 4 times per idle loop
         if (endstops.tmc_spi_homing_check()) break;
-    }
   #endif
 
-  #if ENABLED(MAX7219_DEBUG)
-    max7219.idle_tasks();
-  #endif
+  // Handle SD Card insert / remove
+  TERN_(SDSUPPORT, card.manage_media());
 
+  // Handle USB Flash Drive insert / remove
+  TERN_(USB_FLASH_DRIVE_SUPPORT, Sd2Card::idle());
+
+  // Announce Host Keepalive state (if any)
+  TERN_(HOST_KEEPALIVE_FEATURE, gcode.host_keepalive());
+
+  // Update the Print Job Timer state
+  TERN_(PRINTCOUNTER, print_job_timer.tick());
+
+  // Update the Beeper queue
+  TERN_(USE_BEEPER, buzzer.tick());
+
+  // Read Buttons and Update the LCD
   ui.update();
 
-  #if ENABLED(HOST_KEEPALIVE_FEATURE)
-    gcode.host_keepalive();
-  #endif
-
-  manage_inactivity(
-    #if ENABLED(ADVANCED_PAUSE_FEATURE)
-      no_stepper_sleep
-    #endif
-  );
-
-  thermalManager.manage_heater();
-
-  #if ENABLED(PRINTCOUNTER)
-    print_job_timer.tick();
-  #endif
-
-  #if USE_BEEPER
-    buzzer.tick();
-  #endif
-
+  // Run i2c Position Encoders
   #if ENABLED(I2C_POSITION_ENCODERS)
     static millis_t i2cpem_next_update_ms;
     if (planner.has_blocks_queued()) {
@@ -704,32 +709,19 @@ void idle(
     }
   #endif
 
-  #ifdef HAL_IDLETASK
-    HAL_idletask();
-  #endif
-
+  // Auto-report Temperatures / SD Status
   #if HAS_AUTO_REPORTING
     if (!gcode.autoreport_paused) {
-      #if ENABLED(AUTO_REPORT_TEMPERATURES)
-        thermalManager.auto_report_temperatures();
-      #endif
-      #if ENABLED(AUTO_REPORT_SD_STATUS)
-        card.auto_report_sd_status();
-      #endif
+      TERN_(AUTO_REPORT_TEMPERATURES, thermalManager.auto_report_temperatures());
+      TERN_(AUTO_REPORT_SD_STATUS, card.auto_report_sd_status());
     }
   #endif
 
-  #if ENABLED(USB_FLASH_DRIVE_SUPPORT)
-    Sd2Card::idle();
-  #endif
+  // Update the Prusa MMU2
+  TERN_(PRUSA_MMU2, mmu2.mmu_loop());
 
-  #if ENABLED(PRUSA_MMU2)
-    mmu2.mmu_loop();
-  #endif
-
-  #if ENABLED(POLL_JOG)
-    joystick.inject_jog_moves();
-  #endif
+  // Handle Joystick jogging
+  TERN_(POLL_JOG, joystick.inject_jog_moves());
 }
 
 /**
@@ -738,6 +730,8 @@ void idle(
  */
 void kill(PGM_P const lcd_error/*=nullptr*/, PGM_P const lcd_component/*=nullptr*/, const bool steppers_off/*=false*/) {
   thermalManager.disable_all_heaters();
+
+  TERN_(HAS_CUTTER, cutter.kill()); // Full cutter shutdown including ISR control
 
   SERIAL_ERROR_MSG(STR_ERR_KILLED);
 
@@ -768,33 +762,31 @@ void minkill(const bool steppers_off/*=false*/) {
   // Reiterate heaters off
   thermalManager.disable_all_heaters();
 
+  TERN_(HAS_CUTTER, cutter.kill());  // Reiterate cutter shutdown
+
   // Power off all steppers (for M112) or just the E steppers
   steppers_off ? disable_all_steppers() : disable_e_steppers();
 
-  #if ENABLED(PSU_CONTROL)
-    PSU_OFF();
-  #endif
+  TERN_(PSU_CONTROL, PSU_OFF());
 
-  #if HAS_SUICIDE
-    suicide();
-  #endif
+  TERN_(HAS_SUICIDE, suicide());
 
   #if HAS_KILL
 
     // Wait for kill to be released
-    while (!READ(KILL_PIN)) watchdog_refresh();
+    while (kill_state()) watchdog_refresh();
 
     // Wait for kill to be pressed
-    while (READ(KILL_PIN)) watchdog_refresh();
+    while (!kill_state()) watchdog_refresh();
 
-    void (*resetFunc)() = 0;  // Declare resetFunc() at address 0
+    void (*resetFunc)() = 0;      // Declare resetFunc() at address 0
     resetFunc();                  // Jump to address 0
 
-  #else // !HAS_KILL
+  #else
 
-    for (;;) watchdog_refresh(); // Wait for reset
+    for (;;) watchdog_refresh();  // Wait for reset
 
-  #endif // !HAS_KILL
+  #endif
 }
 
 /**
@@ -838,52 +830,28 @@ void stop() {
  */
 void setup() {
 
-  HAL_init();
-
-  #if HAS_L64XX
-    L64xxManager.init();  // Set up SPI, init drivers
+  #if ENABLED(MARLIN_DEV_MODE)
+    auto log_current_ms = [&](PGM_P const msg) {
+      SERIAL_ECHO_START();
+      SERIAL_CHAR('['); SERIAL_ECHO(millis()); SERIAL_ECHO("] ");
+      serialprintPGM(msg);
+      SERIAL_EOL();
+    };
+    #define SETUP_LOG(M) log_current_ms(PSTR(M))
+  #else
+    #define SETUP_LOG(...) NOOP
   #endif
+  #define SETUP_RUN(C) do{ SETUP_LOG(STRINGIFY(C)); C; }while(0)
 
-  #if ENABLED(SMART_EFFECTOR) && PIN_EXISTS(SMART_EFFECTOR_MOD)
-    OUT_WRITE(SMART_EFFECTOR_MOD_PIN, LOW);   // Put Smart Effector into NORMAL mode
-  #endif
-
-  #if ENABLED(DISABLE_DEBUG)
+  #if EITHER(DISABLE_DEBUG, DISABLE_JTAG)
     // Disable any hardware debug to free up pins for IO
-    #ifdef JTAGSWD_DISABLE
+    #if ENABLED(DISABLE_DEBUG) && defined(JTAGSWD_DISABLE)
       JTAGSWD_DISABLE();
     #elif defined(JTAG_DISABLE)
       JTAG_DISABLE();
     #else
-      #error "DISABLE_DEBUG is not supported for the selected MCU/Board"
+      #error "DISABLE_(DEBUG|JTAG) is not supported for the selected MCU/Board."
     #endif
-  #elif ENABLED(DISABLE_JTAG)
-    // Disable JTAG to free up pins for IO
-    #ifdef JTAG_DISABLE
-      JTAG_DISABLE();
-    #else
-      #error "DISABLE_JTAG is not supported for the selected MCU/Board"
-    #endif
-  #endif
-
-  #if HAS_FILAMENT_SENSOR
-    runout.setup();
-  #endif
-
-  #if ENABLED(POWER_LOSS_RECOVERY)
-    recovery.setup();
-  #endif
-
-  setup_killpin();
-
-  #if HAS_TMC220x
-    tmc_serial_begin();
-  #endif
-
-  setup_powerhold();
-
-  #if HAS_STEPPER_RESET
-    disableStepperDrivers();
   #endif
 
   #if NUM_SERIAL > 0
@@ -895,24 +863,55 @@ void setup() {
       serial_connect_timeout = millis() + 1000UL;
       while (!MYSERIAL1 && PENDING(millis(), serial_connect_timeout)) { /*nada*/ }
     #endif
+    SERIAL_ECHO_MSG("start");
   #endif
 
-  SERIAL_ECHOLNPGM("start");
-  SERIAL_ECHO_START();
+  SETUP_RUN(HAL_init());
+
+  #if HAS_L64XX
+    SETUP_RUN(L64xxManager.init());  // Set up SPI, init drivers
+  #endif
+
+  #if ENABLED(SMART_EFFECTOR) && PIN_EXISTS(SMART_EFFECTOR_MOD)
+    OUT_WRITE(SMART_EFFECTOR_MOD_PIN, LOW);   // Put Smart Effector into NORMAL mode
+  #endif
+
+  #if HAS_FILAMENT_SENSOR
+    SETUP_RUN(runout.setup());
+  #endif
+
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    SETUP_RUN(recovery.setup());
+  #endif
+
+  SETUP_RUN(setup_killpin());
+
+  #if HAS_TMC220x
+    SETUP_RUN(tmc_serial_begin());
+  #endif
+
+  SETUP_RUN(setup_powerhold());
+
+  #if HAS_STEPPER_RESET
+    SETUP_RUN(disableStepperDrivers());
+  #endif
 
   #if HAS_TMC_SPI
     #if DISABLED(TMC_USE_SW_SPI)
-      SPI.begin();
+      SETUP_RUN(SPI.begin());
     #endif
-    tmc_init_cs_pins();
+    SETUP_RUN(tmc_init_cs_pins());
   #endif
 
   #ifdef BOARD_INIT
+    SETUP_LOG("BOARD_INIT");
     BOARD_INIT();
   #endif
 
+  SETUP_RUN(esp_wifi_init());
+
   // Check startup - does nothing if bootloader sets MCUSR to 0
-  byte mcu = HAL_get_reset_source();
+  const byte mcu = HAL_get_reset_source();
   if (mcu &  1) SERIAL_ECHOLNPGM(STR_POWERUP);
   if (mcu &  2) SERIAL_ECHOLNPGM(STR_EXTERNAL_RESET);
   if (mcu &  4) SERIAL_ECHOLNPGM(STR_BROWNOUT_RESET);
@@ -937,22 +936,6 @@ void setup() {
   SERIAL_ECHO_START();
   SERIAL_ECHOLNPAIR(STR_FREE_MEMORY, freeMemory(), STR_PLANNER_BUFFER_BYTES, (int)sizeof(block_t) * (BLOCK_BUFFER_SIZE));
 
-  // UI must be initialized before EEPROM
-  // (because EEPROM code calls the UI).
-
-  #if ENABLED(MARLIN_DEV_MODE)
-    auto log_current_ms = [&](PGM_P const msg) {
-      SERIAL_ECHO_START();
-      SERIAL_CHAR('['); SERIAL_ECHO(millis()); SERIAL_ECHO("] ");
-      serialprintPGM(msg);
-      SERIAL_EOL();
-    };
-    #define SETUP_LOG(M) log_current_ms(PSTR(M))
-  #else
-    #define SETUP_LOG(...) NOOP
-  #endif
-  #define SETUP_RUN(C) do{ SETUP_LOG(STRINGIFY(C)); C; }while(0)
-
   // Set up LEDs early
   #if HAS_COLOR_LEDS
     SETUP_RUN(leds.setup());
@@ -962,15 +945,18 @@ void setup() {
     SETUP_RUN(controllerFan.setup());
   #endif
 
+  // UI must be initialized before EEPROM
+  // (because EEPROM code calls the UI).
+
   SETUP_RUN(ui.init());
   SETUP_RUN(ui.reset_status());       // Load welcome message early. (Retained if no errors exist.)
 
-  #if HAS_SPI_LCD && ENABLED(SHOW_BOOTSCREEN)
+  #if BOTH(HAS_SPI_LCD, SHOW_BOOTSCREEN)
     SETUP_RUN(ui.show_bootscreen());
   #endif
 
-  #if ENABLED(SDSUPPORT) && defined(SDCARD_CONNECTION) && !SD_CONNECTION_IS(LCD)
-    SETUP_RUN(card.mount());          // Mount onboard / custom SD card before settings.first_load
+  #if BOTH(SDSUPPORT, SDCARD_EEPROM_EMULATION)
+    SETUP_RUN(card.mount());          // Mount media with settings before first_load
   #endif
 
   SETUP_RUN(settings.first_load());   // Load data from EEPROM if available (or use defaults)
@@ -984,9 +970,7 @@ void setup() {
     SETUP_RUN(touch.init());
   #endif
 
-  #if HAS_M206_COMMAND
-    current_position += home_offset;  // Init current position based on home_offset
-  #endif
+  TERN_(HAS_M206_COMMAND, current_position += home_offset); // Init current position based on home_offset
 
   sync_plan_position();               // Vital to init stepper/planner equivalent for current_position
 
@@ -1029,7 +1013,7 @@ void setup() {
     SETUP_RUN(enableStepperDrivers());
   #endif
 
-  #if ENABLED(DIGIPOT_I2C)
+  #if HAS_I2C_DIGIPOT
     SETUP_RUN(digipot_i2c_init());
   #endif
 
@@ -1113,15 +1097,11 @@ void setup() {
   #endif
 
   #if ENABLED(SWITCHING_TOOLHEAD)
-    swt_init();
+    SETUP_RUN(swt_init());
   #endif
 
   #if ENABLED(ELECTROMAGNETIC_SWITCHING_TOOLHEAD)
     SETUP_RUN(est_init());
-  #endif
-
-  #if ENABLED(POWER_LOSS_RECOVERY)
-    SETUP_RUN(recovery.check());
   #endif
 
   #if ENABLED(USE_WATCHDOG)
@@ -1135,10 +1115,6 @@ void setup() {
   #ifdef STARTUP_COMMANDS
     SETUP_LOG("STARTUP_COMMANDS");
     queue.inject_P(PSTR(STARTUP_COMMANDS));
-  #endif
-
-  #if ENABLED(INIT_SDCARD_ON_BOOT) && !HAS_SPI_LCD
-    SETUP_RUN(card.beginautostart());
   #endif
 
   #if ENABLED(HOST_PROMPT_SUPPORT)
