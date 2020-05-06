@@ -289,14 +289,6 @@ void menu_cancelobject();
         #define _PID_EDIT_MENU_ITEMS(N) _PID_BASE_MENU_ITEMS(N)
       #endif
 
-      #if ENABLED(PID_FAN_SCALING)
-        #define _PID_EDIT_MENU_ITEMS(N) \
-          _PID_BASE_MENU_ITEMS(N); \
-          EDIT_ITEM_N(float3, N, MSG_PID_F_E, &PID_PARAM(Kf, N), 1, 9990)
-      #else
-        #define _PID_EDIT_MENU_ITEMS(N) _PID_BASE_MENU_ITEMS(N)
-      #endif
-
     #else
 
       #define _PID_EDIT_MENU_ITEMS(N) NOOP

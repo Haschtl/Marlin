@@ -59,10 +59,6 @@ void GcodeSuite::M301() {
       NOMORE(thermalManager.lpq_len, LPQ_MAX_LEN);
       NOLESS(thermalManager.lpq_len, 0);
     #endif
-	
-	#if ENABLED(PID_FAN_SCALING)
-      if (parser.seen('F')) PID_PARAM(Kf, e) = parser.value_float();
-    #endif
 
     #if ENABLED(PID_FAN_SCALING)
       if (parser.seen('F')) PID_PARAM(Kf, e) = parser.value_float();
