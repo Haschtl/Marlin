@@ -1171,7 +1171,7 @@
   /**
    * Auto-report SdCard status with M27 S<seconds>
    */
-  #define AUTO_REPORT_SD_STATUS
+  //#define AUTO_REPORT_SD_STATUS
 
   /**
    * Support for USB thumb drives using an Arduino USB Host Shield or
@@ -2335,7 +2335,7 @@
 
   #if ENABLED(MONITOR_DRIVER_STATUS)
     #define CURRENT_STEP_DOWN     50  // [mA]
-    #define REPORT_CURRENT_CHANGE
+    // #define REPORT_CURRENT_CHANGE
     #define STOP_ON_ERROR
   #endif
 
