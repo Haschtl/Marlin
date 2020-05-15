@@ -1634,7 +1634,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
  *
  * View the current statistics with M78.
  */
-#define PRINTCOUNTER
+// #define PRINTCOUNTER
 
 //=============================================================================
 //============================= LCD and SD support ============================
