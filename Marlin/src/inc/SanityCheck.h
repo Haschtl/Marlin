@@ -2050,26 +2050,26 @@ static_assert(hbm[Z_AXIS] >= 0, "HOMING_BUMP_MM.Z must be greater than or equal 
     static_assert(PWM_PIN(E7_AUTO_FAN_PIN), "E7" AF_ERR_SUFF);
   #endif
 #endif
-#if FAN_COUNT==1
-  #if !PWM_PIN(FAN_PIN)
-    #error "FAN_PIN is not a PWM-pin"
-  #endif
-#endif
-#if FAN_COUNT==2
-  #if !PWM_PIN(FAN1_PIN)
-    #error "FAN1_PIN is not a PWM-pin"
-  #endif
-#endif
-#if FAN_COUNT==3
-  #if !PWM_PIN(FAN2_PIN)
-    #error "FAN2_PIN is not a PWM-pin"
-  #endif
-#endif
-#if FAN_COUNT==4
-  #if !PWM_PIN(FAN3_PIN)
-    #error "FAN3_PIN is not a PWM-pin"
-  #endif
-#endif
+// #if FAN_COUNT==1
+//   #if !PWM_PIN(FAN_PIN)
+//     #error "FAN_PIN is not a PWM-pin"
+//   #endif
+// #endif
+// #if FAN_COUNT==2
+//   #if !PWM_PIN(FAN1_PIN)
+//     #error "FAN1_PIN is not a PWM-pin"
+//   #endif
+// #endif
+// #if FAN_COUNT==3
+//   #if !PWM_PIN(FAN2_PIN)
+//     #error "FAN2_PIN is not a PWM-pin"
+//   #endif
+// #endif
+// #if FAN_COUNT==4
+//   #if !PWM_PIN(FAN3_PIN)
+//     #error "FAN3_PIN is not a PWM-pin"
+//   #endif
+// #endif
 
 
 /**
