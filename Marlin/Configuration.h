@@ -39,7 +39,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
  * Advanced settings can be found in Configuration_adv.h
  *
  */
-#define CONFIGURATION_H_VERSION 020005
+#define CONFIGURATION_H_VERSION 020006
 
 //===========================================================================
 //============================= Getting Started =============================
@@ -998,7 +998,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
-#define MIN_PROBE_EDGE 10
+#define PROBING_MARGIN 10
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 8000
