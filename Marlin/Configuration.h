@@ -1,5 +1,5 @@
 /**
-MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_FAN
+MISSING FEATURES: SENSORLESS_HOMING, FAST_PWM_FAN
 # Not sure if this causes problems: ENDSTOP_INTERRUPTS_FEATURE
 # Maybe SKEW_CORRECTION or BACKLASH_COMPENSATION or BED MESH causes fragments in lowest layer
  * Marlin 3D Printer Firmware
@@ -2264,7 +2264,7 @@ MISSING FEATURES: EMERGENCY_PARSER, SENSORLESS_HOMING, TX_BUFFER_SIZE, FAST_PWM_
 // @section extras
 
 // Increase the FAN PWM frequency. Removes the PWM noise but increases heating in the FET/Arduino
-//#define FAST_PWM_FAN
+// #define FAST_PWM_FAN
 
 // Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
 // which is not as annoying as with the hardware PWM. On the other hand, if this frequency
