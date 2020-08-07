@@ -16,15 +16,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 #pragma once
 
-#define REVERSE_TEMP_SENSOR_RANGE
+#define REVERSE_TEMP_SENSOR_RANGE_20 1
 
-// // Pt100 with INA826 amp on Ultimaker v2.0 electronics
-// const short temptable_20[][2] PROGMEM = {
+// Pt100 with INA826 amp on Ultimaker v2.0 electronics
+// const temp_entry_t temptable_20[] PROGMEM = {
 //   { OV(  0),    0 },
 //   { OV(227),    1 },
 //   { OV(236),   10 },
@@ -77,7 +77,7 @@
 // };
 
 // Custom Pt100 with E3D INA826 amp on 3V3 32bit controller with voltage-divisor
-const short temptable_20[][2] PROGMEM = {
+const temp_entry_t temptable_20[] PROGMEM = {
   { OV(0),	0},
   { OV(227),	0 },
   { OV(230),	1 },
@@ -127,4 +127,3 @@ const short temptable_20[][2] PROGMEM = {
   { OV(862),	934 },
   { OV(917),	1035 },
   { OV(968),	1130 }
-};

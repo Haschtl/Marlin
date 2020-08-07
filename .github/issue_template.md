@@ -2,9 +2,13 @@
 
 Support Requests posted here will be automatically closed!
 
-This Issue Queue is for Marlin bug reports and development-related issues, and we prefer not to handle user-support questions here. See https://github.com/MarlinFirmware/Marlin/blob/1.1.x/.github/contributing.md#i-dont-want-to-read-this-whole-thing-i-just-have-a-question.
+Do you want to ask a question? Are you looking for support? Please don't post here. Instead use one of the following options:
 
-For best results getting help with configuration and troubleshooting, please use the following resources:
+- The Marlin Firmware forum at https://reprap.org/forum/list.php?415
+- The MarlinFirmware Facebook Group at https://www.facebook.com/groups/1049718498464482/
+- The MarlinFirmware Discord Server at https://discord.gg/n5NJ59y.
+
+Before filing an issue be sure to test the latest "bugfix" branch to see whether the issue is already addressed.
 
 - RepRap.org Marlin Forum http://forums.reprap.org/list.php?415
 - Tom's 3D Forums https://discuss.toms3d.org/

@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 #pragma once
 
 // R25 = 100 kOhm, beta25 = 4700 K, 4.7 kOhm pull-up, (personal calibration for Makibox hot bed)
-// const short temptable_12[][2] PROGMEM = {
+// const temp_entry_t temptable_12[] PROGMEM = {
 //   { OV(  35), 180 }, // top rating 180C
 //   { OV( 211), 140 },
 //   { OV( 233), 135 },
@@ -56,7 +56,7 @@
 // };
 
 //Custom Hotend 1
-const short temptable_12[][2] PROGMEM = {
+const temp_entry_t temptable_12[] PROGMEM = {
 { OV(1),	372 },
 { OV(31),	300 },
 { OV(41),	275 },
@@ -107,4 +107,3 @@ const short temptable_12[][2] PROGMEM = {
 { OV(991),	15 },
 { OV(1001),	9 },
 { OV(1021),	0 }
-};
