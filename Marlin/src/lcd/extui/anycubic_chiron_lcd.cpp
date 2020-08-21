@@ -16,21 +16,21 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
 
 /**
- * extui_anycubic_chiron_lcd.cpp
+ * anycubic_chiron_lcd.cpp
  *
  * Anycubic Chiron TFT support for Marlin
  */
 
-#include "../inc/MarlinConfigPre.h"
+#include "../../inc/MarlinConfigPre.h"
 
 #if ENABLED(ANYCUBIC_LCD_CHIRON)
 
-#include "extui/ui_api.h"
+#include "ui_api.h"
 
 #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
   #if GRID_MAX_POINTS_X != 5 || GRID_MAX_POINTS_Y != 5
@@ -145,7 +145,7 @@ namespace ExtUI {
     if (rx[0] != 'A') {
       SERIAL_ECHOPGM("Unexpected RX: ");
       SERIAL_ECHOLN(rx);
-    
+
       return;
     }
 
@@ -490,7 +490,7 @@ namespace ExtUI {
   void onMediaRemoved() {
     SENDLINE_PGM("J01"); // SD Removed
   }
-  
+
   void onPlayTone(const uint16_t frequency, const uint16_t duration) {
     tone(BEEPER_PIN, frequency, duration);
   }
