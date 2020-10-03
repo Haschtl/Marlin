@@ -39,7 +39,9 @@
 #define ST7789V_ORIENTATION_DOWN  0                                     // 240x320 ; Cable on the lower side
 
 //#define ST7789V_COLOR_BGR
-#define ST7789V_ORIENTATION       ST7789V_ORIENTATION_LEFT
+#ifndef ST7789V_ORIENTATION
+  #define ST7789V_ORIENTATION     ST7789V_ORIENTATION_LEFT
+#endif
 #define ST7789V_MADCTL_DATA       (ST7789V_ORIENTATION | TERN(ST7789V_COLOR_BGR, ST7789V_MADCTL_BGR, ST7789V_MADCTL_RGB))
 
 #define ST7789V_NOP               0x00 // No Operation
@@ -87,7 +89,7 @@
 #define ST7789V_WRCABCMB          0x5E // Write CABC Minimum Brightness
 #define ST7789V_RDCABCMB          0x5F // Read CABC Minimum Brightness
 #define ST7789V_RDABCSDR          0x68 // Read Automatic Brightness Control Self-Diagnostic Result
-#define ST7789V_RDID1             0xDA //	Read ID1 Value
+#define ST7789V_RDID1             0xDA // Read ID1 Value
 #define ST7789V_RDID2             0xDB // Read ID2 Value
 #define ST7789V_RDID3             0xDC // Read ID3 Value
 
