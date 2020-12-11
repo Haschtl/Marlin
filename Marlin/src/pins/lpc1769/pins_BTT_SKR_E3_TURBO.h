@@ -161,7 +161,7 @@
 //
 #define TEMP_0_PIN                         P0_24
 #define TEMP_1_PIN                         P0_23
-//#define TEMP_2_PIN                       P1_30   // Onboard thermistor
+//#define TEMP_2_PIN                       P1_30  // Onboard thermistor
 #define TEMP_BED_PIN                       P0_25
 
 //
@@ -172,6 +172,10 @@
 #define HEATER_BED_PIN                     P2_05  // BED
 #define FAN_PIN                            P2_01
 #define FAN1_PIN                           P2_02
+
+#ifndef CONTROLLER_FAN_PIN
+  #define CONTROLLER_FAN_PIN               FAN1_PIN
+#endif
 
 /**
  *                  _____

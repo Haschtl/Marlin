@@ -37,8 +37,10 @@
 #endif
 
 #if HAS_GRAPHICAL_TFT
-  #include "../tft/touch.h"
   #include "../tft/tft.h"
+  #if ENABLED(TOUCH_SCREEN)
+    #include "../tft/touch.h"
+  #endif
 #endif
 
 #if EITHER(PROBE_MANUALLY, MESH_BED_LEVELING)
@@ -167,7 +169,9 @@
     if (ui.should_draw()) {
       MenuItem_static::draw(1, GET_TEXT(MSG_LEVEL_BED_WAITING));
       // Color UI needs a control to detect a touch
-      TERN_(HAS_GRAPHICAL_TFT, touch.add_control(CLICK, 0, 0, TFT_WIDTH, TFT_HEIGHT));
+      #if BOTH(TOUCH_SCREEN, HAS_GRAPHICAL_TFT)
+        touch.add_control(CLICK, 0, 0, TFT_WIDTH, TFT_HEIGHT);
+      #endif
     }
     if (ui.use_click()) {
       manual_probe_index = 0;
@@ -233,7 +237,7 @@
  *    Save Settings       (Req: EEPROM_SETTINGS)
  */
 void menu_bed_leveling() {
-  const bool is_homed = all_axes_known(),
+  const bool is_homed = all_axes_trusted(),
              is_valid = leveling_is_valid();
 
   START_MENU();
@@ -281,10 +285,6 @@ void menu_bed_leveling() {
     SUBMENU(MSG_ZPROBE_ZOFFSET, lcd_babystep_zoffset);
   #elif HAS_BED_PROBE
     EDIT_ITEM(LCD_Z_OFFSET_TYPE, MSG_ZPROBE_ZOFFSET, &probe.offset.z, Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX);
-  #endif
-
-  #if ENABLED(PROBE_OFFSET_WIZARD)
-    SUBMENU(MSG_PROBE_WIZARD, goto_probe_offset_wizard);
   #endif
 
   #if ENABLED(LEVEL_BED_CORNERS)
