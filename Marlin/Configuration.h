@@ -497,22 +497,32 @@ MISSING FEATURES: SENSORLESS_HOMING, FAST_PWM_FAN
     #define DEFAULT_Kp_LIST { 4,    6 }
     #define DEFAULT_Ki_LIST { 0.065,0.07}
     #define DEFAULT_Kd_LIST { 2,    2 }
-  #else
-    // #define DEFAULT_Kp  22.20
-    // #define DEFAULT_Ki   1.08
-    // #define DEFAULT_Kd 114.00
 
-    // Kellerdrucker Classic PID, Hotend0, good at functional range 100
-    #define DEFAULT_Kp 4
-    #define DEFAULT_Ki 0.065
-    #define DEFAULT_Kd 2
-    // Kf = 0.35
-    // Kc = 100
+    // last autotune (no fan)
+    // #define DEFAULT_Kp 11.79
+    // #define DEFAULT_Ki 0.99
+    // #define DEFAULT_Kd 35.13
 
-    // Kellerdrucker Classic PID, Hotend1
-    // #define DEFAULT_Kp 6
-    // #define DEFAULT_Ki 0.07
-    // #define DEFAULT_Kd 2
+    // Last autotune (fan on)
+// #define DEFAULT_Kp 12.05
+// #define DEFAULT_Ki 1.01
+// #define DEFAULT_Kd 35.90
+#else
+// #define DEFAULT_Kp  22.20
+// #define DEFAULT_Ki   1.08
+// #define DEFAULT_Kd 114.00
+
+// Kellerdrucker Classic PID, Hotend0, good at functional range 100
+#define DEFAULT_Kp 4
+#define DEFAULT_Ki 0.065
+#define DEFAULT_Kd 2
+// Kf = 0.35
+// Kc = 100
+
+// Kellerdrucker Classic PID, Hotend1
+// #define DEFAULT_Kp 6
+// #define DEFAULT_Ki 0.07
+// #define DEFAULT_Kd 2
 #endif
 #endif // PIDTEMP
 
@@ -761,7 +771,7 @@ MISSING FEATURES: SENSORLESS_HOMING, FAST_PWM_FAN
 // New Kellerdrucker: Kalibriert mit Laser
 // Old E0: 1747.2445   new: 873.62225 (16microstep)
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 319.0331, 319.1447, 1997.5115, 1747.2445, 387.317} // { 80, 80, 4000, 500 }
-#define DEFAULT_AXIS_STEPS_PER_UNIT { 322.2557, 322.3684, 1997.5115, 436.8111, 387.317}
+#define DEFAULT_AXIS_STEPS_PER_UNIT { 322.2557, 322.3684, 1997.5115, 218.4, 387.317}
 // X: 400x32x
 // Y: 400x32x
 // Z: 400x32x

@@ -7,5 +7,7 @@
 			"path": "C:\\Users\\hasch\\.platformio\\packages\\framework-arduinoststm32"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath": "C:\\Users\\hasch\\AppData\\Local\\Programs\\Python\\Python37\\python.exe"
+	}
 }
