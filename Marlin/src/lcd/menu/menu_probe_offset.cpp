@@ -42,7 +42,9 @@
 // Global storage
 float z_offset_backup, calculated_z_offset, z_offset_ref;
 
-TERN_(HAS_LEVELING, bool leveling_was_active);
+#if ENABLED(HAS_LEVELING)
+  bool leveling_was_active;
+#endif
 
 inline void z_clearance_move() {
   do_z_clearance(
@@ -56,14 +58,14 @@ inline void z_clearance_move() {
   );
 }
 
-void set_offset_and_go_back(const float &z) {
+void set_offset_and_go_back(const_float_t z) {
   probe.offset.z = z;
   SET_SOFT_ENDSTOP_LOOSE(false);
   TERN_(HAS_LEVELING, set_bed_leveling_enabled(leveling_was_active));
   ui.goto_previous_screen_no_defer();
 }
 
-void _goto_manual_move_z(const float scale) {
+void _goto_manual_move_z(const_float_t scale) {
   ui.manual_move.menu_scale = scale;
   ui.goto_screen(lcd_move_z);
 }
@@ -81,20 +83,19 @@ void probe_offset_wizard_menu() {
   SUBMENU(MSG_MOVE_1MM,  []{ _goto_manual_move_z( 1);    });
   SUBMENU(MSG_MOVE_01MM, []{ _goto_manual_move_z( 0.1f); });
 
-  if ((SHORT_MANUAL_Z_MOVE) > 0.0f && (SHORT_MANUAL_Z_MOVE) < 0.1f) {
+  if ((FINE_MANUAL_MOVE) > 0.0f && (FINE_MANUAL_MOVE) < 0.1f) {
     char tmp[20], numstr[10];
     // Determine digits needed right of decimal
-    const uint8_t digs = !UNEAR_ZERO((SHORT_MANUAL_Z_MOVE) * 1000 - int((SHORT_MANUAL_Z_MOVE) * 1000)) ? 4 :
-                         !UNEAR_ZERO((SHORT_MANUAL_Z_MOVE) *  100 - int((SHORT_MANUAL_Z_MOVE) *  100)) ? 3 : 2;
-    sprintf_P(tmp, GET_TEXT(MSG_MOVE_Z_DIST), dtostrf(SHORT_MANUAL_Z_MOVE, 1, digs, numstr));
+    const uint8_t digs = !UNEAR_ZERO((FINE_MANUAL_MOVE) * 1000 - int((FINE_MANUAL_MOVE) * 1000)) ? 4 :
+                         !UNEAR_ZERO((FINE_MANUAL_MOVE) *  100 - int((FINE_MANUAL_MOVE) *  100)) ? 3 : 2;
+    sprintf_P(tmp, GET_TEXT(MSG_MOVE_N_MM), dtostrf(FINE_MANUAL_MOVE, 1, digs, numstr));
     #if DISABLED(HAS_GRAPHICAL_TFT)
-      extern const char NUL_STR[];
-      SUBMENU_P(NUL_STR, []{ _goto_manual_move_z(float(SHORT_MANUAL_Z_MOVE)); });
+      SUBMENU_P(NUL_STR, []{ _goto_manual_move_z(float(FINE_MANUAL_MOVE)); });
       MENU_ITEM_ADDON_START(0 + ENABLED(HAS_MARLINUI_HD44780));
       lcd_put_u8str(tmp);
       MENU_ITEM_ADDON_END();
     #else
-      SUBMENU_P(tmp, []{ _goto_manual_move_z(float(SHORT_MANUAL_Z_MOVE)); });
+      SUBMENU_P(tmp, []{ _goto_manual_move_z(float(FINE_MANUAL_MOVE)); });
     #endif
   }
 
@@ -120,10 +121,10 @@ void probe_offset_wizard_menu() {
 }
 
 void prepare_for_probe_offset_wizard() {
-  if (ui.wait_for_move) return;
-
   #if defined(PROBE_OFFSET_WIZARD_XY_POS) || !HOMING_Z_WITH_PROBE
     if (ui.should_draw()) MenuItem_static::draw(1, GET_TEXT(MSG_PROBE_WIZARD_PROBING));
+
+    if (ui.wait_for_move) return;
 
     #ifndef PROBE_OFFSET_WIZARD_XY_POS
       #define PROBE_OFFSET_WIZARD_XY_POS XY_CENTER
@@ -133,19 +134,24 @@ void prepare_for_probe_offset_wizard() {
 
     // Probe for Z reference
     ui.wait_for_move = true;
-    z_offset_ref = probe.probe_at_point(wizard_pos, PROBE_PT_STOW, 0, true);
+    z_offset_ref = probe.probe_at_point(wizard_pos, PROBE_PT_RAISE, 0, true);
     ui.wait_for_move = false;
 
+    // Stow the probe, as the last call to probe.probe_at_point(...) left
+    // the probe deployed if it was successful.
+    probe.stow();
+  #else
+    if (ui.wait_for_move) return;
   #endif
-
-  SET_SOFT_ENDSTOP_LOOSE(true); // Disable soft endstops for free Z movement
 
   // Move Nozzle to Probing/Homing Position
   ui.wait_for_move = true;
   current_position += probe.offset_xy;
-  line_to_current_position(MMM_TO_MMS(HOMING_FEEDRATE_XY));
+  line_to_current_position(MMM_TO_MMS(XY_PROBE_FEEDRATE));
   ui.synchronize(GET_TEXT(MSG_PROBE_WIZARD_MOVING));
   ui.wait_for_move = false;
+
+  SET_SOFT_ENDSTOP_LOOSE(true); // Disable soft endstops for free Z movement
 
   // Go to Calibration Menu
   ui.goto_screen(probe_offset_wizard_menu);
