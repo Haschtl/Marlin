@@ -664,7 +664,7 @@ MISSING FEATURES: SENSORLESS_HOMING, FAST_PWM_FAN
  * the issues involved, don't use chamber PID until someone else verifies that your hardware works.
  */
 //#define PIDTEMPCHAMBER
-//#define CHAMBER_LIMIT_SWITCHING
+#define CHAMBER_LIMIT_SWITCHING
 
 /**
  * Max Chamber Power
